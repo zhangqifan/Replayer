@@ -90,6 +90,9 @@
 /*** 停止加载动画 ***/
 - (void)endLoadingAnimation { return; }
 
+/*** 从xxx时间开始播放的提示 ***/
+- (void)toastFromSeekTime:(NSInteger)seekTime { return; }
+
 /*** 开始播放 ***/
 - (void)playWithCurrentTask { return; }
 

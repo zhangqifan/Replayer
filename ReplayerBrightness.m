@@ -176,9 +176,9 @@
 
 - (void)setStatusBarHidden:(BOOL)statusBarHidden {
     _statusBarHidden = statusBarHidden;
-    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden withAnimation:UIStatusBarAnimationFade];
-//    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-//    [[window rep_getCurrentViewController] setNeedsStatusBarAppearanceUpdate];
+//    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden withAnimation:UIStatusBarAnimationFade];
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    [[window rep_getCurrentViewController] setNeedsStatusBarAppearanceUpdate];
 }
 
 @end

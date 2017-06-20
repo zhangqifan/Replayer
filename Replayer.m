@@ -30,7 +30,7 @@ static ReplayerItemObservingProperty const ReplayerItemObservingLikelyToKeepUp  
 
 /*! 加载超时时间 */
 typedef NSInteger ReplayerTaskProperty;
-static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 20;
+static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 60;
 
 @interface Replayer () <UIGestureRecognizerDelegate>
 
@@ -527,13 +527,13 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 [self p_addGestures];
                 // 开启自动关闭控制板
                 [self.playerPanel replayerPanelShows];
-                // 是否由定时器进入，即从错误中恢复并继续播放
-                if (self.loadingTimer) {
-                    [self seekToTimestamp:self.feasibleTime completionHandler:NULL];
+                if (self.seekTime) {
+                    [self seekToTimestamp:self.seekTime completionHandler:NULL];
+                    [self.playerPanel toastFromSeekTime:self.seekTime];
                 } else {
-                    // 上次播放至某秒继续播放
-                    if (self.seekTime) {
-                        [self seekToTimestamp:self.seekTime completionHandler:NULL];
+                    if (self.feasibleTime) {
+                        [self seekToTimestamp:self.feasibleTime completionHandler:NULL];
+                        self.networkStatus==ReachableViaWWAN ? : [self.playerPanel toastFromSeekTime:self.feasibleTime];
                     }
                 }
                 if (!self.playerItem.isPlaybackLikelyToKeepUp) {
@@ -551,8 +551,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
             [self.playerPanel replayerSetBufferProgress:buffered / totalSeconds];
             
         } else if ([keyPath isEqualToString:ReplayerItemObservingLikelyToKeepUp]) {
-//            NSLog(@"keep up : %@",self.playerItem.isPlaybackLikelyToKeepUp?@"YES":@"NO");
-//            self.playerItem.isPlaybackLikelyToKeepUp ? [self.playerPanel endLoadingAnimation] : [self.playerPanel loadingAnimation];
             if (self.playerItem.isPlaybackLikelyToKeepUp && self.state == ReplayerCurrentStateBuffering) {
                 self.state = ReplayerCurrentStatePlaying;
             }
@@ -832,7 +830,17 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
  继续播放
  */
 - (void)continuePlaying {
+    if (self.player.currentItem == nil) {
+        [self configureReplayer];
+    }
     [self doPlay];
+}
+
+/**
+ 移除播放的任务
+ */
+- (void)removeCurrentTask {
+    [self resetReplayer];
 }
 
 #pragma mark - ReplayerPanelProtocol
@@ -1085,7 +1093,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     if (_state == ReplayerCurrentStateBuffering) {
         [self.playerPanel loadingAnimation];
         self.timeout = 0;
-//        [self checkLoadingTimeout];
+        [self checkLoadingTimeout];
     } else {
         [self.playerPanel endLoadingAnimation];
         // 结束loading，回归正常
@@ -1117,6 +1125,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self p_addObserversOnPlayerItem];
     } else {
         [self p_removeObserversOnEmptyPlayerItem];
+        [self.playerPanel replayerPanelShows];
         _playerItem = playerItem;
     }
 }

@@ -124,4 +124,9 @@ typedef NS_ENUM(NSUInteger, ReplayerUnableToResumeReason) {
  */
 - (void)continuePlaying;
 
+/**
+ 移除正在播放的任务
+ */
+- (void)removeCurrentTask;
+
 @end

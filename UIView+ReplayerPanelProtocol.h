@@ -83,6 +83,9 @@
 /*** 隐藏快进快退视图 ***/
 - (void)hideForwardView;
 
+/*** 从xxx时间开始播放的提示 ***/
+- (void)toastFromSeekTime:(NSInteger)seekTime;
+
 /*** 加载动画 ***/
 - (void)loadingAnimation;
 

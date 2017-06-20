@@ -10,6 +10,7 @@
 #import "ReplayerComposer.h"
 #import "ReplayerTrackSlider.h"
 #import <MMMaterialDesignSpinner/MMMaterialDesignSpinner.h>
+#import <Toast/UIView+Toast.h>
 
 #define kScale [UIScreen mainScreen].bounds.size.width/375.0
 
@@ -402,6 +403,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** 将视频任务给控制板呈现数据，标题/时长 等 ***/
 - (void)sendReplayerTask:(ReplayerTask *)task {
     self.fullScreenButton.hidden = YES;     // 默认全屏，不需要切换，暂时不启用
+    self.fullScreen = YES;
     if (!task.coverImage && !task.coverImageURL) {
         self.preImageView.alpha = 0.0f;
     }
@@ -415,9 +417,6 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
  - replayerPanelChangesDisplayStatus    : 改变控制板的显示状态
  */
 - (void)replayerPanelShows {
-//    if (self.delegate && [self.delegate respondsToSelector:@selector(replayerPanelWillComeOut:)]) {
-//        [self.delegate replayerPanelWillComeOut:self];
-//    }
     [self replayerPanelCancelAutoChangeStatus];
     [UIView animateWithDuration:0.3 animations:^{
         [self activatePanel];
@@ -427,9 +426,6 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 }
 
 - (void)replayerPanelDisappears {
-//    if (self.delegate && [self.delegate respondsToSelector:@selector(replayerPanelWillDisappear:)]) {
-//        [self.delegate replayerPanelWillDisappear:self];
-//    }
     [self replayerPanelCancelAutoChangeStatus];
     [UIView animateWithDuration:0.3 animations:^{
         [self inactivatePanel];
@@ -606,6 +602,36 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     [self.loadingView startAnimating];
 }
 
+/*** 从xxx时间开始播放的提示 ***/
+- (void)toastFromSeekTime:(NSInteger)seekTime {
+    
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.backgroundColor = RGBA(0, 0, 0, 0.6);
+    style.titleFont = [UIFont systemFontOfSize:14.0f];
+    
+    NSInteger hour = seekTime / 3600;
+    if (hour == 0) {
+        int nowSecond   = (int)seekTime % 60;
+        int nowMinute   = (int)(seekTime / 60) % 60;
+
+        if (self.isFullScreen) {
+            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d，从此处继续播放",nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+        } else {
+            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d处继续播放",nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+        }
+    } else {
+        int nowSecond   = (int)seekTime % 60;
+        int nowMinute   = (int)(seekTime / 60) % 60;
+        int nowHour     = (int)seekTime / 3600;
+        
+        if (self.isFullScreen) {
+            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d:%02d，从此处继续播放",nowHour,nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+        } else {
+            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d:%02d处继续播放",nowHour,nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+        }
+    }
+}
+
 /*** 停止加载动画 ***/
 - (void)endLoadingAnimation {
     [self.loadingView stopAnimating];
@@ -722,6 +748,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** trackSlider 准备开始滑动 ***/
 - (void)trackSliderTouchBegan:(UISlider *)trackSlider {
     [self replayerPanelCancelAutoChangeStatus];
+    [ReplayerBrightness sharedInstance].statusBarHidden = NO;
     // 播放完毕或者播放错误时禁用进度条
     if (self.isEndStreaming || !self.isInError) { return; }
     if (self.delegate && [self.delegate respondsToSelector:@selector(replayerPanel:progressBarTouchBegan:)]) {
@@ -932,13 +959,6 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     }
     return _fullScreenButton;
 }
-
-//- (ReplayerLoading *)loadingView {
-//    if (!_loadingView) {
-//        
-//    }
-//    return _loadingView;
-//}
 
 - (MMMaterialDesignSpinner *)loadingView {
     if (!_loadingView) {
