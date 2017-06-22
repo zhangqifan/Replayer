@@ -662,11 +662,16 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 /*** 视频任务大小 ***/
 - (void)replayerTaskCapacity:(NSNumber *)videoCapacity {
-    NSString *label = [NSString stringWithFormat:@"本视频共 %@MB 流量 \n 您目前不在 wifi 环境下，继续播放可能会产生流量费用",videoCapacity];
-    NSMutableAttributedString *mutableAttr = [[NSMutableAttributedString alloc] initWithString:label];
+    NSString *capaLabel = @"";
+    if (videoCapacity) {
+        capaLabel = [NSString stringWithFormat:@"本视频共 %@MB 流量 \n 您目前不在 wifi 环境下，继续播放可能会产生流量费用",videoCapacity];
+    } else {
+        capaLabel = [NSString stringWithFormat:@"播放视频需要消耗数据流量 \n 您目前不在 wifi 环境下，继续播放可能会产生流量费用"];
+    }
+    NSMutableAttributedString *mutableAttr = [[NSMutableAttributedString alloc] initWithString:capaLabel];
     NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];
     [pStyle setLineSpacing:6.0f];
-    [mutableAttr addAttribute:NSParagraphStyleAttributeName value:pStyle range:NSMakeRange(0, label.length)];
+    [mutableAttr addAttribute:NSParagraphStyleAttributeName value:pStyle range:NSMakeRange(0, capaLabel.length)];
     self.usingCellularPromptLabel.attributedText = mutableAttr;
     self.usingCellularPromptLabel.adjustsFontSizeToFitWidth = YES;
     self.usingCellularPromptLabel.textAlignment = NSTextAlignmentCenter;

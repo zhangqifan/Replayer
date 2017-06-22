@@ -1,0 +1,5 @@
+target 'ReplayerDemo' do
+  pod 'Masonry'
+  pod 'MMMaterialDesignSpinner'
+  pod 'Toast'
+end
