@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23CAE5B763F672696F1E40D7 /* libPods-Replayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A0553C21775676ABD39AB4 /* libPods-Replayer.a */; };
 		8431A90B1F00A2B500AEAC96 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A90A1F00A2B500AEAC96 /* main.m */; };
 		8431A90E1F00A2B500AEAC96 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A90D1F00A2B500AEAC96 /* AppDelegate.m */; };
 		8431A9111F00A2B600AEAC96 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A9101F00A2B600AEAC96 /* ViewController.m */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		20A0553C21775676ABD39AB4 /* libPods-Replayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Replayer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AD3A2502AECE95DEE946B37 /* Pods-Replayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Replayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Replayer/Pods-Replayer.debug.xcconfig"; sourceTree = "<group>"; };
 		8431A9061F00A2B500AEAC96 /* Replayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Replayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8431A90A1F00A2B500AEAC96 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8431A90C1F00A2B500AEAC96 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -51,6 +54,7 @@
 		8431A92A1F00A2B600AEAC96 /* ReplayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReplayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8431A92E1F00A2B600AEAC96 /* ReplayerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReplayerUITests.m; sourceTree = "<group>"; };
 		8431A9301F00A2B600AEAC96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9143A2110A2058069D6EEB7F /* Pods-Replayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Replayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-Replayer/Pods-Replayer.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23CAE5B763F672696F1E40D7 /* libPods-Replayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +90,8 @@
 				8431A9221F00A2B600AEAC96 /* ReplayerTests */,
 				8431A92D1F00A2B600AEAC96 /* ReplayerUITests */,
 				8431A9071F00A2B500AEAC96 /* Products */,
+				9E9ABC18774F172A1A52CF41 /* Pods */,
+				A5DD653DD733D4E590CF4CDC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -140,6 +147,23 @@
 			path = ReplayerUITests;
 			sourceTree = "<group>";
 		};
+		9E9ABC18774F172A1A52CF41 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6AD3A2502AECE95DEE946B37 /* Pods-Replayer.debug.xcconfig */,
+				9143A2110A2058069D6EEB7F /* Pods-Replayer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A5DD653DD733D4E590CF4CDC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				20A0553C21775676ABD39AB4 /* libPods-Replayer.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -147,9 +171,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8431A9331F00A2B600AEAC96 /* Build configuration list for PBXNativeTarget "Replayer" */;
 			buildPhases = (
+				0D7A24259159F687EE967B17 /* [CP] Check Pods Manifest.lock */,
 				8431A9021F00A2B500AEAC96 /* Sources */,
 				8431A9031F00A2B500AEAC96 /* Frameworks */,
 				8431A9041F00A2B500AEAC96 /* Resources */,
+				0EDF6A382A1CA91B49FE9686 /* [CP] Embed Pods Frameworks */,
+				1AC28837A1FE5473E05969AF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -270,6 +297,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0D7A24259159F687EE967B17 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		0EDF6A382A1CA91B49FE9686 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Replayer/Pods-Replayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1AC28837A1FE5473E05969AF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Replayer/Pods-Replayer-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8431A9021F00A2B500AEAC96 /* Sources */ = {
@@ -425,6 +500,7 @@
 		};
 		8431A9341F00A2B600AEAC96 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6AD3A2502AECE95DEE946B37 /* Pods-Replayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = N8Y3LCHZY9;
@@ -437,6 +513,7 @@
 		};
 		8431A9351F00A2B600AEAC96 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9143A2110A2058069D6EEB7F /* Pods-Replayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = N8Y3LCHZY9;
