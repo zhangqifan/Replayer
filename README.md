@@ -1,5 +1,7 @@
 # Replayer
 
+[![Build Status](https://travis-ci.org/zhangqifan/Replayer.svg?branch=master)](https://travis-ci.org/zhangqifan/Replayer)
+
 Replayer 是一款基于 **[AVFoundation](https://developer.apple.com/documentation/avfoundation)** 框架编写的视频播放器，支持 iOS 7 及其以上版本的系统。采用 MVC 的设计模式，分离了对播放器的操作和操作引起视图或布局的变化，并提供了对视频控制视图的自定义以及扩展功能的支持。
 
 当前版本：***0.1.0***

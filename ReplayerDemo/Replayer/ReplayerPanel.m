@@ -11,6 +11,7 @@
 #import "ReplayerTrackSlider.h"
 #import <MMMaterialDesignSpinner/MMMaterialDesignSpinner.h>
 #import <Toast/UIView+Toast.h>
+#import <Masonry.h>
 
 #define kScale [UIScreen mainScreen].bounds.size.width/375.0
 
