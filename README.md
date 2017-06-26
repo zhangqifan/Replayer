@@ -41,7 +41,7 @@ Replayer 是一款基于 **[AVFoundation](https://developer.apple.com/documentat
 
 ## 值得去做、提上日程的事
 
-* [ ] 添加 Travis.CI 支持
+* [X] ~~添加 Travis.CI 支持~~
 
 
 * [ ] 在 CocoaPods 中注册库

@@ -10,8 +10,6 @@
 		3473CFE654F64D8F6EAC7596 /* libPods-ReplayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */; };
 		8431A94A1F00A89A00AEAC96 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A9491F00A89A00AEAC96 /* main.m */; };
 		8431A94D1F00A89A00AEAC96 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A94C1F00A89A00AEAC96 /* AppDelegate.m */; };
-		8431A9501F00A89A00AEAC96 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A94F1F00A89A00AEAC96 /* ViewController.m */; };
-		8431A9531F00A89A00AEAC96 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9511F00A89A00AEAC96 /* Main.storyboard */; };
 		8431A9551F00A89A00AEAC96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9541F00A89A00AEAC96 /* Assets.xcassets */; };
 		8431A9581F00A89A00AEAC96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9561F00A89A00AEAC96 /* LaunchScreen.storyboard */; };
 		8431A9631F00A89A00AEAC96 /* ReplayerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A9621F00A89A00AEAC96 /* ReplayerDemoTests.m */; };
@@ -25,6 +23,10 @@
 		8431A9961F00AAA500AEAC96 /* ReplayerTrackSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A98B1F00AAA500AEAC96 /* ReplayerTrackSlider.m */; };
 		8431A9971F00AAA500AEAC96 /* UIView+ReplayerPanelProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A98D1F00AAA500AEAC96 /* UIView+ReplayerPanelProtocol.m */; };
 		8431A9981F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A98F1F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.m */; };
+		8431A99C1F00E8A800AEAC96 /* VideoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A99A1F00E8A800AEAC96 /* VideoListViewController.m */; };
+		8431A99D1F00E8A800AEAC96 /* VideoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8431A99B1F00E8A800AEAC96 /* VideoListViewController.xib */; };
+		8431A9A11F01008E00AEAC96 /* ReplayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */; };
+		8431A9A21F01008E00AEAC96 /* ReplayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,9 +53,6 @@
 		8431A9491F00A89A00AEAC96 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8431A94B1F00A89A00AEAC96 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8431A94C1F00A89A00AEAC96 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		8431A94E1F00A89A00AEAC96 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		8431A94F1F00A89A00AEAC96 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		8431A9521F00A89A00AEAC96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8431A9541F00A89A00AEAC96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8431A9571F00A89A00AEAC96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8431A9591F00A89A00AEAC96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -83,6 +82,12 @@
 		8431A98D1F00AAA500AEAC96 /* UIView+ReplayerPanelProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ReplayerPanelProtocol.m"; sourceTree = "<group>"; };
 		8431A98E1F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+GetCurrentViewController.h"; sourceTree = "<group>"; };
 		8431A98F1F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+GetCurrentViewController.m"; sourceTree = "<group>"; };
+		8431A9991F00E8A800AEAC96 /* VideoListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoListViewController.h; sourceTree = "<group>"; };
+		8431A99A1F00E8A800AEAC96 /* VideoListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoListViewController.m; sourceTree = "<group>"; };
+		8431A99B1F00E8A800AEAC96 /* VideoListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoListViewController.xib; sourceTree = "<group>"; };
+		8431A99E1F01008E00AEAC96 /* ReplayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerViewController.h; sourceTree = "<group>"; };
+		8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerViewController.m; sourceTree = "<group>"; };
+		8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReplayerViewController.xib; sourceTree = "<group>"; };
 		86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReplayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -149,8 +154,12 @@
 				8431A97B1F00AAA500AEAC96 /* Replayer */,
 				8431A94B1F00A89A00AEAC96 /* AppDelegate.h */,
 				8431A94C1F00A89A00AEAC96 /* AppDelegate.m */,
-				8431A94E1F00A89A00AEAC96 /* ViewController.h */,
-				8431A94F1F00A89A00AEAC96 /* ViewController.m */,
+				8431A9991F00E8A800AEAC96 /* VideoListViewController.h */,
+				8431A99A1F00E8A800AEAC96 /* VideoListViewController.m */,
+				8431A99B1F00E8A800AEAC96 /* VideoListViewController.xib */,
+				8431A99E1F01008E00AEAC96 /* ReplayerViewController.h */,
+				8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */,
+				8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */,
 				8431A9481F00A89A00AEAC96 /* Supporting Files */,
 			);
 			path = ReplayerDemo;
@@ -159,7 +168,6 @@
 		8431A9481F00A89A00AEAC96 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				8431A9511F00A89A00AEAC96 /* Main.storyboard */,
 				8431A9541F00A89A00AEAC96 /* Assets.xcassets */,
 				8431A9561F00A89A00AEAC96 /* LaunchScreen.storyboard */,
 				8431A9591F00A89A00AEAC96 /* Info.plist */,
@@ -334,8 +342,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8431A9581F00A89A00AEAC96 /* LaunchScreen.storyboard in Resources */,
+				8431A99D1F00E8A800AEAC96 /* VideoListViewController.xib in Resources */,
+				8431A9A21F01008E00AEAC96 /* ReplayerViewController.xib in Resources */,
 				8431A9551F00A89A00AEAC96 /* Assets.xcassets in Resources */,
-				8431A9531F00A89A00AEAC96 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,17 +417,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8431A9501F00A89A00AEAC96 /* ViewController.m in Sources */,
 				8431A9931F00AAA500AEAC96 /* ReplayerLoading.m in Sources */,
 				8431A94D1F00A89A00AEAC96 /* AppDelegate.m in Sources */,
 				8431A9921F00AAA500AEAC96 /* ReplayerBrightness.m in Sources */,
 				8431A9961F00AAA500AEAC96 /* ReplayerTrackSlider.m in Sources */,
 				8431A9911F00AAA500AEAC96 /* Replayer.m in Sources */,
 				8431A9901F00AAA500AEAC96 /* Reachability.m in Sources */,
+				8431A9A11F01008E00AEAC96 /* ReplayerViewController.m in Sources */,
 				8431A9951F00AAA500AEAC96 /* ReplayerTask.m in Sources */,
 				8431A9941F00AAA500AEAC96 /* ReplayerPanel.m in Sources */,
 				8431A9981F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.m in Sources */,
 				8431A94A1F00A89A00AEAC96 /* main.m in Sources */,
+				8431A99C1F00E8A800AEAC96 /* VideoListViewController.m in Sources */,
 				8431A9971F00AAA500AEAC96 /* UIView+ReplayerPanelProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -455,14 +465,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		8431A9511F00A89A00AEAC96 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8431A9521F00A89A00AEAC96 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		8431A9561F00A89A00AEAC96 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
