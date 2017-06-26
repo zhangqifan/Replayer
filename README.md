@@ -1,6 +1,7 @@
 # Replayer
 
 [![Build Status](https://travis-ci.org/zhangqifan/Replayer.svg?branch=master)](https://travis-ci.org/zhangqifan/Replayer)
+![https://img.shields.io/badge/version-0.1.0-orange.svg](https://img.shields.io/badge/version-0.1.0-orange.svg)
 
 Replayer 是一款基于 **[AVFoundation](https://developer.apple.com/documentation/avfoundation)** 框架编写的视频播放器，支持 iOS 7 及其以上版本的系统。采用 MVC 的设计模式，分离了对播放器的操作和操作引起视图或布局的变化，并提供了对视频控制视图的自定义以及扩展功能的支持。
 
@@ -53,7 +54,7 @@ Replayer 是一款基于 **[AVFoundation](https://developer.apple.com/documentat
 
 ## License
 
-Copyright 2017 Qifan Zhang
+Copyright 2017 chipmuck
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

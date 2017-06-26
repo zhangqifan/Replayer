@@ -151,10 +151,6 @@
 				8431A94C1F00A89A00AEAC96 /* AppDelegate.m */,
 				8431A94E1F00A89A00AEAC96 /* ViewController.h */,
 				8431A94F1F00A89A00AEAC96 /* ViewController.m */,
-				8431A9511F00A89A00AEAC96 /* Main.storyboard */,
-				8431A9541F00A89A00AEAC96 /* Assets.xcassets */,
-				8431A9561F00A89A00AEAC96 /* LaunchScreen.storyboard */,
-				8431A9591F00A89A00AEAC96 /* Info.plist */,
 				8431A9481F00A89A00AEAC96 /* Supporting Files */,
 			);
 			path = ReplayerDemo;
@@ -163,6 +159,10 @@
 		8431A9481F00A89A00AEAC96 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8431A9511F00A89A00AEAC96 /* Main.storyboard */,
+				8431A9541F00A89A00AEAC96 /* Assets.xcassets */,
+				8431A9561F00A89A00AEAC96 /* LaunchScreen.storyboard */,
+				8431A9591F00A89A00AEAC96 /* Info.plist */,
 				8431A9491F00A89A00AEAC96 /* main.m */,
 			);
 			name = "Supporting Files";
