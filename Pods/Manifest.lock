@@ -1,0 +1,18 @@
+PODS:
+  - Masonry (1.0.2)
+  - MMMaterialDesignSpinner (0.2.3)
+  - Toast (3.1.0)
+
+DEPENDENCIES:
+  - Masonry
+  - MMMaterialDesignSpinner
+  - Toast (~> 3.1.0)
+
+SPEC CHECKSUMS:
+  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  MMMaterialDesignSpinner: 55c80b454f7928d0ed789cc3c456fa06bd6a2f16
+  Toast: 14a93686d6c8bfe2727afd342414e35660a8a1f3
+
+PODFILE CHECKSUM: e8e7389cb1355206fcb6b59eb3ed4f274b7523e3
+
+COCOAPODS: 1.2.1
