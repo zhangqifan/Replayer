@@ -7,7 +7,6 @@
 //
 
 #import "ReplayerBrightness.h"
-#import "UIWindow+GetCurrentViewController.h"
 #import "ReplayerComposer.h"
 
 @interface ReplayerBrightness ()

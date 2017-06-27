@@ -8,12 +8,8 @@
 
 #import "ReplayerPanel.h"
 #import "ReplayerComposer.h"
-#import "ReplayerTrackSlider.h"
-#import <MMMaterialDesignSpinner/MMMaterialDesignSpinner.h>
-#import <Toast/UIView+Toast.h>
-#import <Masonry.h>
 
-#define kScale [UIScreen mainScreen].bounds.size.width/375.0
+#define kScale ScreenWidth/375.0
 
 static const CGFloat ReplayerUpperViewHeight            = 40.0f;
 static const CGFloat ReplayerBelowViewHeight            = 40.0f;
@@ -175,7 +171,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         make.top.equalTo(self.containerView.mas_top);
         make.left.equalTo(self.containerView.mas_left);
         make.right.equalTo(self.containerView.mas_right);
-        make.height.mas_equalTo(20+ReplayerUpperViewHeight);
+        make.height.mas_equalTo(ReplayerUpperViewHeight);
     }];
     
     [self.belowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -197,7 +193,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         make.left.equalTo(self.upperView.mas_left).offset(10);
         make.height.mas_equalTo(40);
         make.width.mas_equalTo(35);
-        make.centerY.equalTo(self.upperView).offset(10);
+        make.centerY.equalTo(self.upperView);
     }];
     
     [self.backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -488,9 +484,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     
     self.forwardView.hidden = NO;
     if (isForward) {
-        self.forwardImageView.image = [UIImage imageNamed:@"replayer_fastforward"];
+        self.forwardImageView.image = GetBundleAsset(@"replayer_fast_forward");
     } else {
-        self.forwardImageView.image = [UIImage imageNamed:@"replayer_fastbackward"];
+        self.forwardImageView.image = GetBundleAsset(@"replayer_fast_backward");
     }
     
     self.dragging = YES;
@@ -845,7 +841,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 - (UIImageView *)backImageView {
     if (!_backImageView) {
-        _backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+        _backImageView = [[UIImageView alloc] initWithImage:GetBundleAsset(@"replayer_back")];
         _backImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _backImageView;
@@ -883,7 +879,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 - (UIImageView *)upperGradient {
     if (!_upperGradient) {
-        _upperGradient = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"upper-gradient"]];
+        _upperGradient = [[UIImageView alloc] initWithImage:GetBundleAsset(@"upper-gradient")];
         _upperGradient.contentMode = UIViewContentModeScaleToFill;
     }
     return _upperGradient;
@@ -891,7 +887,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 - (UIImageView *)belowGradient {
     if (!_belowGradient) {
-        _belowGradient = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"below-gradient"]];
+        _belowGradient = [[UIImageView alloc] initWithImage:GetBundleAsset(@"below-gradient")];
         _belowGradient.contentMode = UIViewContentModeScaleToFill;
     }
     return _belowGradient;
@@ -900,8 +896,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 - (UIButton *)playButton {
     if (!_playButton) {
         _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playButton setImage:[UIImage imageNamed:@"replayer_play"] forState:UIControlStateNormal];
-        [_playButton setImage:[UIImage imageNamed:@"replayer_pause"] forState:UIControlStateSelected];
+        [_playButton setImage:GetBundleAsset(@"replayer_play") forState:UIControlStateNormal];
+        [_playButton setImage:GetBundleAsset(@"replayer_pause") forState:UIControlStateSelected];
         [_playButton addTarget:self action:@selector(playButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playButton;
@@ -923,8 +919,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         _playTrack.playedTintColor = RGBA(255, 164, 36, 1);
         _playTrack.bufferedTintColor = RGBA(255, 255, 255, 0.6);
         _playTrack.trackTintColor = RGBA(255, 255, 255, 0.3);
-        [_playTrack setSliderBlock:[UIImage imageNamed:@"replayer_trackpoint"] forState:UIControlStateNormal];
-        [_playTrack setSliderBlock:[UIImage imageNamed:@"replayer_trackpoint"] forState:UIControlStateHighlighted];
+        [_playTrack setSliderBlock:GetBundleAsset(@"replayer_track_point") forState:UIControlStateNormal];
+        [_playTrack setSliderBlock:GetBundleAsset(@"replayer_track_point") forState:UIControlStateHighlighted];
         
         [_playTrack.playedTrack addTarget:self action:@selector(trackSliderTouchBegan:) forControlEvents:UIControlEventTouchDown];
         [_playTrack.playedTrack addTarget:self action:@selector(trackSliderValueDidChange:) forControlEvents:UIControlEventValueChanged];
@@ -959,8 +955,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (!_fullScreenButton) {
         _fullScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_fullScreenButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-        [_fullScreenButton setImage:[UIImage imageNamed:@"fullScreen"] forState:UIControlStateNormal];
-        [_fullScreenButton setImage:[UIImage imageNamed:@"minimize"] forState:UIControlStateSelected];
+        [_fullScreenButton setImage:GetBundleAsset(@"replayer_full_screen") forState:UIControlStateNormal];
+        [_fullScreenButton setImage:GetBundleAsset(@"replayer_16_9") forState:UIControlStateSelected];
         [_fullScreenButton addTarget:self action:@selector(enterFullScreenAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _fullScreenButton;
@@ -979,8 +975,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (!_lockButton) {
         _lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_lockButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-        [_lockButton setImage:[UIImage imageNamed:@"fullScreen"] forState:UIControlStateNormal];
-        [_lockButton setImage:[UIImage imageNamed:@"minimize"] forState:UIControlStateSelected];
+        [_lockButton setImage:GetBundleAsset(@"replayer_full_screen") forState:UIControlStateNormal];
+        [_lockButton setImage:GetBundleAsset(@"replayer_16_9") forState:UIControlStateSelected];
         [_lockButton addTarget:self action:@selector(lockAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _lockButton;

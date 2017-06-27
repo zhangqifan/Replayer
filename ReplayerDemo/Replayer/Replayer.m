@@ -9,8 +9,6 @@
 #import "Replayer.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "Reachability.h"
-#import "ReplayerBrightness.h"
 #import "ReplayerComposer.h"
 
 /*! 播放器手势滑动方向 */
@@ -1076,7 +1074,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 }
 
 - (void)setPlayTask:(ReplayerTask *)playTask {
-    NSAssert(playTask, @"需要一个视频播放任务");
+    NSAssert(playTask, @"请检查创建的视频任务是否为空，至少需要一个视频任务才能进行播放");
     _playTask = playTask;
     [self.playerPanel sendReplayerTask:_playTask];
     
@@ -1101,9 +1099,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 - (void)setState:(ReplayerCurrentState)state {
     _state = state;
-    
-    NSLog(@"latest state : %lu",(unsigned long)_state);
-    
     // 一旦进入加载动画，就启动播放时间监听，进入加载失败的倒计时loop
     if (_state == ReplayerCurrentStateBuffering) {
         [self.playerPanel loadingAnimation];

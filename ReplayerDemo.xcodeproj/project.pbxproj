@@ -27,6 +27,7 @@
 		8431A99D1F00E8A800AEAC96 /* VideoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8431A99B1F00E8A800AEAC96 /* VideoListViewController.xib */; };
 		8431A9A11F01008E00AEAC96 /* ReplayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */; };
 		8431A9A21F01008E00AEAC96 /* ReplayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */; };
+		8431AA241F02469300AEAC96 /* ReplayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8431AA231F02469300AEAC96 /* ReplayerResource.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		8431A99E1F01008E00AEAC96 /* ReplayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerViewController.h; sourceTree = "<group>"; };
 		8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerViewController.m; sourceTree = "<group>"; };
 		8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReplayerViewController.xib; sourceTree = "<group>"; };
+		8431AA231F02469300AEAC96 /* ReplayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ReplayerResource.bundle; sourceTree = "<group>"; };
 		86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReplayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -197,6 +199,7 @@
 		8431A97B1F00AAA500AEAC96 /* Replayer */ = {
 			isa = PBXGroup;
 			children = (
+				8431AA231F02469300AEAC96 /* ReplayerResource.bundle */,
 				8431A97C1F00AAA500AEAC96 /* Reachability.h */,
 				8431A97D1F00AAA500AEAC96 /* Reachability.m */,
 				8431A97E1F00AAA500AEAC96 /* Replayer.h */,
@@ -341,6 +344,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8431AA241F02469300AEAC96 /* ReplayerResource.bundle in Resources */,
 				8431A9581F00A89A00AEAC96 /* LaunchScreen.storyboard in Resources */,
 				8431A99D1F00E8A800AEAC96 /* VideoListViewController.xib in Resources */,
 				8431A9A21F01008E00AEAC96 /* ReplayerViewController.xib in Resources */,

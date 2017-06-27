@@ -86,6 +86,7 @@
         _replayerTask = [[ReplayerTask alloc] init];
         _replayerTask.videoTitle = @"HLS测试视频";
         _replayerTask.streamingURL = self.videoSourceStr;
+        _replayerTask.checkCellularEnable = YES;
         
         if (self.playingType == VideoPlayingTypeResume) {
             // 从视频第20秒开始播放
