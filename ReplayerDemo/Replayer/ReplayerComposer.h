@@ -27,6 +27,7 @@
 #import "ReplayerLoading.h"
 #import "ReplayerPanelProtocol.h"
 #import "ReplayerTrackSlider.h"
+#import "ReplayerPlaybackCache.h"
 #import "Reachability.h"
 
 #import "UIView+ReplayerPanelProtocol.h"

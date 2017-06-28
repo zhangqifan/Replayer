@@ -28,6 +28,7 @@
 		8431A9A11F01008E00AEAC96 /* ReplayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */; };
 		8431A9A21F01008E00AEAC96 /* ReplayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */; };
 		8431AA241F02469300AEAC96 /* ReplayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8431AA231F02469300AEAC96 /* ReplayerResource.bundle */; };
+		849AC5D81F038ADE00F9EC79 /* ReplayerPlaybackCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC5D71F038ADE00F9EC79 /* ReplayerPlaybackCache.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,8 @@
 		8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerViewController.m; sourceTree = "<group>"; };
 		8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReplayerViewController.xib; sourceTree = "<group>"; };
 		8431AA231F02469300AEAC96 /* ReplayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ReplayerResource.bundle; sourceTree = "<group>"; };
+		849AC5D61F038ADE00F9EC79 /* ReplayerPlaybackCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerPlaybackCache.h; sourceTree = "<group>"; };
+		849AC5D71F038ADE00F9EC79 /* ReplayerPlaybackCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerPlaybackCache.m; sourceTree = "<group>"; };
 		86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReplayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -220,6 +223,8 @@
 				8431A98D1F00AAA500AEAC96 /* UIView+ReplayerPanelProtocol.m */,
 				8431A98E1F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.h */,
 				8431A98F1F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.m */,
+				849AC5D61F038ADE00F9EC79 /* ReplayerPlaybackCache.h */,
+				849AC5D71F038ADE00F9EC79 /* ReplayerPlaybackCache.m */,
 			);
 			path = Replayer;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 				8431A9A11F01008E00AEAC96 /* ReplayerViewController.m in Sources */,
 				8431A9951F00AAA500AEAC96 /* ReplayerTask.m in Sources */,
 				8431A9941F00AAA500AEAC96 /* ReplayerPanel.m in Sources */,
+				849AC5D81F038ADE00F9EC79 /* ReplayerPlaybackCache.m in Sources */,
 				8431A9981F00AAA500AEAC96 /* UIWindow+GetCurrentViewController.m in Sources */,
 				8431A94A1F00A89A00AEAC96 /* main.m in Sources */,
 				8431A99C1F00E8A800AEAC96 /* VideoListViewController.m in Sources */,

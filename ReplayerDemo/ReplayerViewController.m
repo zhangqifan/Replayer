@@ -9,7 +9,7 @@
 #import "ReplayerViewController.h"
 #import "ReplayerComposer.h"
 
-@interface ReplayerViewController ()
+@interface ReplayerViewController () <ReplayerDelegate>
 
 @property (nonatomic, strong) Replayer *replayer;
 @property (nonatomic, strong) ReplayerTask *replayerTask;
@@ -69,6 +69,7 @@
 
 - (void)setupReplayer {
     self.replayer = [[Replayer alloc] init];
+    self.replayer.delegate = self;
     if (self.playingType == VideoPlayingTypeLocalVideo || self.playingType == VideoPlayingTypeBeforeReplay || self.playingType == VideoPlayingTypeFullFeatures || self.playingType == VideoPlayingTypeResume) {
         [self.replayer replayerUsesDefaultPanelWithTask:self.replayerTask];
     }
@@ -83,6 +84,12 @@
     [self.replayer playInstantlyWhenPrepared];
 }
 
+#pragma mark - Replayer Delegate
+
+- (void)replayerDidGoBack:(Replayer *)replayer {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - Getter
 
 - (ReplayerTask *)replayerTask {
@@ -91,6 +98,8 @@
         _replayerTask.videoTitle = @"HLS测试视频";
         _replayerTask.streamingURL = self.videoSourceStr;
         _replayerTask.checkCellularEnable = YES;
+        _replayerTask.videoIdentifier = @"apple_bippop_test_video";
+        _replayerTask.cachePlayback = YES;
         
         if (self.playingType == VideoPlayingTypeResume) {
             // 从视频第20秒开始播放

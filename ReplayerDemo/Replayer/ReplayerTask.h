@@ -23,6 +23,12 @@ NS_ASSUME_NONNULL_BEGIN
 /*** 视频 HLS 地址 ***/
 @property (nonatomic, strong) NSString *streamingURL;
 
+/*** 视频的唯一标识符，用于存储当前此视频的播放进度 ***/
+@property (nullable, nonatomic, strong) NSString *videoIdentifier;
+
+/*** 是否启用存储视频播放进度功能，默认关闭。如果开启，那么必须设置 videoIdentifier 属性，否则该属性无效 ***/
+@property (nonatomic, assign, getter=isCachePlayback) BOOL cachePlayback;
+
 /*** 视频封面图（如有提前加载则使用该属性） ***/
 @property (nullable, nonatomic, strong) UIImage *coverImage;
 /*** 视频封面图源自网络（如两个属性都进行设置，则以加载完毕的图片资源为准，如已经开始播放图片仍未加载，则停止加载） ***/

@@ -41,17 +41,17 @@ typedef NS_ENUM(NSUInteger, ReplayerUnableToResumeReason) {
 
 /**
  承载播放器的视图（通常指当前 viewController）的返回事件
- @param playedTime 已经播放的时间
  */
-- (void)replayer:(Replayer *)replayer goBackWithPlayedTime:(CGFloat)playedTime;
+- (void)replayerDidGoBack:(Replayer *)replayer;
+
+@optional
 
 /**
  进入后台
 
  @param replayer Replayer
- @param playedTime 已经播放时间
  */
-- (void)replayer:(Replayer *)replayer willBeResignedToBackgroundToSavePlayedTime:(CGFloat)playedTime;
+- (void)replayerWillBeResignedToBackground:(Replayer *)replayer;
 
 /**
  进入前台
