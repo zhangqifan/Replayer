@@ -151,6 +151,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     self.playerLayer.videoGravity = self.p_videoGravity;
     
+//    self.seekTime = self.feasibleTime;
+    
     [self configureVolume];
     
     [self activatePeriodTimeObserver];
@@ -303,7 +305,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         CMTime cmTimestamp = CMTimeMakeWithSeconds(timestamp, self.player.currentItem.duration.timescale);
         __weak typeof(self) weakSelf = self;
         // 精确定位
-        [self.player seekToTime:cmTimestamp toleranceBefore:CMTimeMake(1, self.player.currentItem.duration.timescale) toleranceAfter:CMTimeMake(1, self.player.currentItem.duration.timescale) completionHandler:^(BOOL finished) {
+        [self.player seekToTime:cmTimestamp toleranceBefore:CMTimeMake(1, 1) toleranceAfter:CMTimeMake(1, 1) completionHandler:^(BOOL finished) {
             [weakSelf.playerPanel endLoadingAnimation];
             if (completionHandler) {
                 completionHandler(finished);
@@ -312,9 +314,10 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 [weakSelf.player play];
             }
             [weakSelf.playerPanel replayerEndSliding];
+            weakSelf.seekTime = 0;
             weakSelf.dragging = NO;
             
-            if ([self bufferedDuration] <= 0.0) {
+            if (!weakSelf.playerItem.isPlaybackLikelyToKeepUp) {
                 weakSelf.state = ReplayerCurrentStateBuffering;
             }
         }];
@@ -458,7 +461,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 网络监听到变化时更新视图操作 ***/
 - (void)updateInterfaceWithReachability:(Reachability *)reachability {
     self.networkStatus = [reachability currentReachabilityStatus];
-    NSLog(@"当前网络状态 : %ld",(long)self.networkStatus);
     switch (self.networkStatus) {
         case NotReachable:
             if (!self.denyCellular) {
@@ -523,25 +525,21 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 [self layoutIfNeeded];
                 // 视频资源准备完毕，将播放layer添加至播放器layer
                 [self.layer insertSublayer:self.playerLayer atIndex:0];
+                self.state = ReplayerCurrentStatePlaying;
                 // 视频资源准备完毕后再生成平移手势
                 [self addGestureRecognizer:self.panGesture];
                 [self p_addGestures];
                 // 开启自动关闭控制板
-                [self.playerPanel replayerPanelShows];
+//                [self.playerPanel replayerPanelShows];
                 // 外部的继续时间
                 if (self.seekTime) {
                     [self seekToTimestamp:self.seekTime completionHandler:NULL];
-                    [self.playerPanel toastFromSeekTime:self.seekTime];
-                } else {
-                    if (self.feasibleTime) {
-                        [self seekToTimestamp:self.feasibleTime completionHandler:NULL];
-                        self.networkStatus==ReachableViaWWAN ? : [self.playerPanel toastFromSeekTime:self.feasibleTime];
-                    }
-                }
-                if (!self.playerItem.isPlaybackLikelyToKeepUp) {
-                    self.state = ReplayerCurrentStateBuffering;
-                } else {
-                    self.state = ReplayerCurrentStatePlaying;
+//                    [self.playerPanel toastFromSeekTime:self.seekTime];
+//                } else {
+//                    if (self.feasibleTime) {
+//                        [self seekToTimestamp:self.feasibleTime completionHandler:NULL];
+//                        self.networkStatus==ReachableViaWWAN ? : [self.playerPanel toastFromSeekTime:self.feasibleTime];
+//                    }
                 }
             } else if (self.player.currentItem.status == AVPlayerItemStatusFailed) {
                 self.state = ReplayerCurrentStateFailedToLoad;
@@ -553,6 +551,9 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
             [self.playerPanel replayerSetBufferProgress:buffered / totalSeconds];
             
         } else if ([keyPath isEqualToString:ReplayerItemObservingLikelyToKeepUp]) {
+//            if (!self.playerItem.isPlaybackLikelyToKeepUp) {
+//                self.state = ReplayerCurrentStateBuffering;
+//            }
             if (self.playerItem.isPlaybackLikelyToKeepUp && self.state == ReplayerCurrentStateBuffering) {
                 self.state = ReplayerCurrentStatePlaying;
             }
@@ -561,9 +562,9 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
             // 缓冲为空的情况下，尽量多缓冲一些时间
             if (self.playerItem.isPlaybackBufferEmpty) {
                 self.state = ReplayerCurrentStateBuffering;
-                if (self.networkStatus != NotReachable) {
-                    [self continueBufferInSeconds];
-                }
+//                if (self.networkStatus != NotReachable) {
+//                    [self continueBufferInSeconds];
+//                }
             }
         } else if ([keyPath isEqualToString:ReplayerItemObservingBufferFull]) {
             // 此参数会缓冲至一定时间时收到事件，并不一定是整个视频完全缓冲完毕

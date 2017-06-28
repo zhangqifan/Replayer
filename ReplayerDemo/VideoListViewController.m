@@ -59,7 +59,7 @@ static NSString * const videoCellIdentifier = @"videoCell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     ReplayerViewController *replayerVC = [[ReplayerViewController alloc] init];
-    replayerVC.videoSourceStr = @"https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8";
+    replayerVC.videoSourceStr = @"https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8";
     replayerVC.playingType = VideoPlayingTypeFullFeatures;
     [self.navigationController pushViewController:replayerVC animated:YES];
 }

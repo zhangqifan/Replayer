@@ -17,7 +17,7 @@
 #define GetBundleAsset(_x_) [UIImage imageWithContentsOfFile:[BUNDLE_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"Contents/Resources/%@",_x_]]]
 
 // Apple HTTP Live Streaming Test Video
-#define StreamingURLDemo    @"https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+#define StreamingURLDemo    @"https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"
 
 // 头文件
 #import "Replayer.h"
