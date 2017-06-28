@@ -646,6 +646,23 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** 是否进入了全屏模式 ***/
 - (void)replayerDidBecomeFullScreen:(BOOL)isFullScreen {
     self.fullScreen = isFullScreen;
+    [self.upperView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.fullScreen) {
+            make.height.mas_equalTo(ReplayerUpperViewHeight+20);
+        } else {
+            make.height.mas_equalTo(ReplayerUpperViewHeight);
+        }
+    }];
+    
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.fullScreen) {
+            make.centerY.equalTo(self.upperView).offset(10);
+        } else {
+            make.centerY.equalTo(self.upperView);
+        }
+    }];
+    
+    [self.videoTitleLabel updateConstraintsIfNeeded];
 }
 
 /*** 使用流量提醒 ***/

@@ -61,6 +61,10 @@
     return UIStatusBarStyleLightContent;
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return [ReplayerBrightness sharedInstance].isStatusBarHidden;
+}
+
 #pragma mark - Setup Replayer
 
 - (void)setupReplayer {

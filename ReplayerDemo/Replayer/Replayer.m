@@ -115,7 +115,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         self.enableVolumeAdjust     = NO;
         self.enableBrightnessAdjust = NO;
         self.userTriggeredPause     = NO;
-        self.fullScreen             = YES;      /// fullscreen: 以后把默认的去掉
+//        self.fullScreen             = YES;      /// fullscreen: 以后把默认的去掉
         self.backgroundColor = [UIColor blackColor];
     }
     return self;
@@ -367,12 +367,12 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     [self setNeedsLayout];
     
+    self.fullScreen = YES;
+    [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
+    
     [UIView animateWithDuration:0.3 animations:^{
         [self layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        self.fullScreen = YES;
-        [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
-    }];
+    } completion:NULL];
 }
 
 /*** 退出全屏 ***/
@@ -380,21 +380,21 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     if (!self.isFullScreen) { return; }
     
+    // be able to edit: 修改 auto layout，使之保持和初期约束一致
     [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.superview);
-        make.left.equalTo(self.superview);
-        make.right.equalTo(self.superview);
+        make.top.mas_equalTo(20);
+        make.leading.and.trailing.equalTo(self.superview);
         make.height.equalTo(self.superview.mas_width).multipliedBy(9.0/16.0);
     }];
     
     [self setNeedsLayout];
     
+    self.fullScreen = NO;
+    [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
+    
     [UIView animateWithDuration:0.3 animations:^{
         [self layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        self.fullScreen = NO;
-        [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
-    }];
+    } completion:NULL];
 }
 
 /*** 强制旋转屏幕 ***/
@@ -525,21 +525,11 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 [self layoutIfNeeded];
                 // 视频资源准备完毕，将播放layer添加至播放器layer
                 [self.layer insertSublayer:self.playerLayer atIndex:0];
-                self.state = ReplayerCurrentStatePlaying;
                 // 视频资源准备完毕后再生成平移手势
                 [self addGestureRecognizer:self.panGesture];
-                [self p_addGestures];
-                // 开启自动关闭控制板
-//                [self.playerPanel replayerPanelShows];
                 // 外部的继续时间
                 if (self.seekTime) {
                     [self seekToTimestamp:self.seekTime completionHandler:NULL];
-//                    [self.playerPanel toastFromSeekTime:self.seekTime];
-//                } else {
-//                    if (self.feasibleTime) {
-//                        [self seekToTimestamp:self.feasibleTime completionHandler:NULL];
-//                        self.networkStatus==ReachableViaWWAN ? : [self.playerPanel toastFromSeekTime:self.feasibleTime];
-//                    }
                 }
             } else if (self.player.currentItem.status == AVPlayerItemStatusFailed) {
                 self.state = ReplayerCurrentStateFailedToLoad;
@@ -551,17 +541,14 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
             [self.playerPanel replayerSetBufferProgress:buffered / totalSeconds];
             
         } else if ([keyPath isEqualToString:ReplayerItemObservingLikelyToKeepUp]) {
-//            if (!self.playerItem.isPlaybackLikelyToKeepUp) {
-//                self.state = ReplayerCurrentStateBuffering;
-//            }
             if (self.playerItem.isPlaybackLikelyToKeepUp && self.state == ReplayerCurrentStateBuffering) {
                 self.state = ReplayerCurrentStatePlaying;
             }
         } else if ([keyPath isEqualToString:ReplayerItemObservingBufferEmpty]) {
-            NSLog(@"BUFFER EMPTY.");
             // 缓冲为空的情况下，尽量多缓冲一些时间
             if (self.playerItem.isPlaybackBufferEmpty) {
                 self.state = ReplayerCurrentStateBuffering;
+                // 暂时不启用继续缓冲功能
 //                if (self.networkStatus != NotReachable) {
 //                    [self continueBufferInSeconds];
 //                }
@@ -603,17 +590,15 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         }];
     }
     if (deviceOrientation == UIDeviceOrientationPortrait) {
-        return;
-        /// fullscreen: 现在只做横屏
-//        [self becomeDefaultScaleOnScreen];
-//        
-//        [self.brightnessAdjust removeFromSuperview];
-//        [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessAdjust];
-//        [self.brightnessAdjust mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.width.height.mas_equalTo(155);
-//            make.centerX.equalTo(self.brightnessAdjust.superview);
-//            make.centerY.equalTo(self.brightnessAdjust.superview);
-//        }];
+        [self becomeDefaultScaleOnScreen];
+        
+        [self.brightnessAdjust removeFromSuperview];
+        [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessAdjust];
+        [self.brightnessAdjust mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(155);
+            make.centerX.equalTo(self.brightnessAdjust.superview);
+            make.centerY.equalTo(self.brightnessAdjust.superview);
+        }];
     }
 }
 
@@ -901,16 +886,15 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self.playerPanel replayerPanelCancelAutoChangeStatus];
         [self.delegate replayer:self goBackWithPlayedTime:self.feasibleTime];
     }
-    //// fullscreen: 可调整全屏时启用，现在默认全屏直接 dismiss
-//    if (self.isFullScreen) {
-//        [self forceToChangeDeviceOrientation:UIInterfaceOrientationPortrait];
-//        [self becomeDefaultScaleOnScreen];
-//    } else {
-//        [self doPause];
-//        if (delegateRespondsCache.replayerContainerShouldBeGoBack) {
-//            [self.delegate replayerContainerShouldBeGoBack];
-//        }
-//    }
+    if (self.isFullScreen) {
+        [self forceToChangeDeviceOrientation:UIInterfaceOrientationPortrait];
+        [self becomeDefaultScaleOnScreen];
+    } else {
+        [self doPause];
+        if (delegateRespondsCache.replayerContainerShouldBeGoBack) {
+            [self.delegate replayer:self goBackWithPlayedTime:self.feasibleTime];
+        }
+    }
 }
 
 /*** 重播事件 ***/
@@ -1071,6 +1055,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     if (_streamingURL && _streamingURL.length > 0) {
         [self p_addDeviceNotifications];
+        [self p_addGestures];
     }
 }
 
