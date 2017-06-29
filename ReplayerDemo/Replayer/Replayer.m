@@ -367,7 +367,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 //    [[[UIApplication sharedApplication] keyWindow] addSubview:self];
     
     [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsZero);
+        make.edges.equalTo(self.superview);
     }];
     
     [self setNeedsLayout];
@@ -888,8 +888,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         } else {
             [self forceToChangeDeviceOrientation:UIInterfaceOrientationPortrait];
         }
-        
-        !fullScreenButton.isSelected ? [self becomeFullScreen] : [self becomeDefaultScaleOnScreen];
     }
 }
 

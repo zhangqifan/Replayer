@@ -231,7 +231,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     }];
     
     [self.durationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.belowView.mas_right).offset(-10);
+        make.right.equalTo(self.fullScreenButton.mas_left);
         make.width.mas_equalTo(55);
         make.centerY.equalTo(self.playButton.mas_centerY);
     }];
@@ -399,8 +399,6 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 /*** 将视频任务给控制板呈现数据，标题/时长 等 ***/
 - (void)sendReplayerTask:(ReplayerTask *)task {
-    self.fullScreenButton.hidden = YES;     // 默认全屏，不需要切换，暂时不启用
-    self.fullScreen = YES;
     if (!task.coverImage && !task.coverImageURL) {
         self.preImageView.alpha = 0.0f;
     }
@@ -646,6 +644,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** 是否进入了全屏模式 ***/
 - (void)replayerDidBecomeFullScreen:(BOOL)isFullScreen {
     self.fullScreen = isFullScreen;
+    self.fullScreenButton.selected = isFullScreen;
     [self.upperView mas_updateConstraints:^(MASConstraintMaker *make) {
         if (self.fullScreen) {
             make.height.mas_equalTo(ReplayerUpperViewHeight+20);
