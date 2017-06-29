@@ -104,7 +104,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** 视频是否播放完毕 ***/
 @property (nonatomic, assign, getter=isEndStreaming)    BOOL endStreaming;
 /*** 播放错误 ***/
-@property (nonatomic, assign, getter=isInError)          BOOL error;
+@property (nonatomic, assign, getter=isInError)         BOOL error;
 
 /*** 控制板拿到的播放任务 ***/
 @property (nonatomic, strong) ReplayerTask *playTask;
@@ -339,7 +339,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     self.activatePanel = YES;
     self.upperView.alpha = 1.0f;
     self.belowView.alpha = 1.0f;
-    [ReplayerBrightness sharedInstance].statusBarHidden = NO;
+    [ReplayerStatusBarManager sharedInstance].statusBarHidden = NO;
 }
 
 /*** 隐藏控制板 ***/
@@ -347,7 +347,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     self.activatePanel = NO;
     self.upperView.alpha = 0.0f;
     self.belowView.alpha = 0.0f;
-    [ReplayerBrightness sharedInstance].statusBarHidden = YES;
+    [ReplayerStatusBarManager sharedInstance].statusBarHidden = YES;
 }
 
 /*** 开启自动隐藏控制板功能 ***/
@@ -511,7 +511,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
         self.draggedTimeLabel.attributedText = attrStr;
         self.draggedTimeLabel.textAlignment = NSTextAlignmentCenter;
-        [self.draggedProgress setProgress:slideValue animated:YES];
+        [self.draggedProgress setProgress:slideValue animated:NO];
         
     } else {
         int nowSecond   = (int)currentSecond % 60;
@@ -533,7 +533,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
         self.draggedTimeLabel.attributedText = attrStr;
         self.draggedTimeLabel.textAlignment = NSTextAlignmentCenter;
-        [self.draggedProgress setProgress:slideValue animated:YES];
+        [self.draggedProgress setProgress:slideValue animated:NO];
     }
 }
 
@@ -612,9 +612,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         int nowMinute   = (int)(seekTime / 60) % 60;
 
         if (self.isFullScreen) {
-            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d，从此处继续播放",nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d，从此处继续播放",nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         } else {
-            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d处继续播放",nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d处继续播放",nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         }
     } else {
         int nowSecond   = (int)seekTime % 60;
@@ -622,9 +622,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         int nowHour     = (int)seekTime / 3600;
         
         if (self.isFullScreen) {
-            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d:%02d，从此处继续播放",nowHour,nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d:%02d，从此处继续播放",nowHour,nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         } else {
-            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d:%02d处继续播放",nowHour,nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d:%02d处继续播放",nowHour,nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         }
     }
 }
@@ -670,7 +670,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (useCellular) {
         self.usingCellularView.hidden = NO;
         self.upperView.hidden = NO;
-        [ReplayerBrightness sharedInstance].statusBarHidden = NO;
+        [ReplayerStatusBarManager sharedInstance].statusBarHidden = NO;
     }
 }
 
@@ -767,9 +767,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** trackSlider 准备开始滑动 ***/
 - (void)trackSliderTouchBegan:(UISlider *)trackSlider {
     [self replayerPanelCancelAutoChangeStatus];
-    [ReplayerBrightness sharedInstance].statusBarHidden = NO;
-    // 播放完毕或者播放错误时禁用进度条
-    if (self.isEndStreaming || !self.isInError) { return; }
+    [ReplayerStatusBarManager sharedInstance].statusBarHidden = NO;
     if (self.delegate && [self.delegate respondsToSelector:@selector(replayerPanel:progressBarTouchBegan:)]) {
         [self.delegate replayerPanel:self progressBarTouchBegan:trackSlider];
     }
@@ -836,6 +834,18 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
             self.usingCellularPromptLabel.font = [UIFont systemFontOfSize:12.0f];
         }
     }
+}
+
+// 播放是否结束
+- (void)setEndStreaming:(BOOL)endStreaming {
+    _endStreaming = endStreaming;
+    self.playTrack.userInteractionEnabled = !_endStreaming;
+}
+
+// 播放是否出现错误
+- (void)setError:(BOOL)error {
+    _error = error;
+    self.playTrack.userInteractionEnabled = !_error;
 }
 
 #pragma mark - 各类控制板控件的 lazy load

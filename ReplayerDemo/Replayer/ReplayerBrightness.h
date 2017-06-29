@@ -13,7 +13,4 @@
 /*** 将修改亮度实例创建为一个单例 ***/
 + (instancetype)sharedInstance;
 
-/*** 状态栏显示/隐藏参数 ***/
-@property (nonatomic, assign, getter=isStatusBarHidden) BOOL statusBarHidden;
-
 @end

@@ -126,7 +126,7 @@
     [[UIScreen mainScreen] addObserver:self forKeyPath:@"brightness" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     [self brightnessAppear];
     [self updateBrightness:[[change objectForKey:NSKeyValueChangeNewKey] floatValue]];
 }
@@ -169,15 +169,6 @@
             self.alpha = 0.0f;
         } completion:NULL];
     }
-}
-
-#pragma mark - setter
-
-- (void)setStatusBarHidden:(BOOL)statusBarHidden {
-    _statusBarHidden = statusBarHidden;
-//    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden withAnimation:UIStatusBarAnimationFade];
-    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-    [[window rep_getCurrentViewController] setNeedsStatusBarAppearanceUpdate];
 }
 
 @end

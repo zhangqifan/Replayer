@@ -24,6 +24,7 @@
 #import "ReplayerTask.h"
 #import "ReplayerPanel.h"
 #import "ReplayerBrightness.h"
+#import "ReplayerStatusBarManager.h"
 #import "ReplayerLoading.h"
 #import "ReplayerPanelProtocol.h"
 #import "ReplayerTrackSlider.h"

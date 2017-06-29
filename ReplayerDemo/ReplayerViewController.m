@@ -62,7 +62,7 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return [ReplayerBrightness sharedInstance].isStatusBarHidden;
+    return [ReplayerStatusBarManager sharedInstance].isStatusBarHidden;
 }
 
 #pragma mark - Setup Replayer
@@ -100,6 +100,7 @@
         _replayerTask.checkCellularEnable = YES;
         _replayerTask.videoIdentifier = @"apple_bippop_test_video";
         _replayerTask.cachePlayback = YES;
+        _replayerTask.seekTime = [ReplayerPlaybackCache fetchPlaybackMomentByVideoIdentifier:_replayerTask.videoIdentifier];
         
         if (self.playingType == VideoPlayingTypeResume) {
             // 从视频第20秒开始播放

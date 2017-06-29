@@ -87,11 +87,13 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 检测网络状态 ***/
 @property (nonatomic) Reachability *networkFlag;
 @property (nonatomic, assign) NetworkStatus networkStatus;
-/*** 记录真实播放时间 ***/
+/*** 记录真实播放时间 todo: change to CMTime struct ***/
 @property (nonatomic, assign) CGFloat feasibleTime;
 /*** 加载时间定时器 ***/
 @property (nonatomic, strong) dispatch_source_t loadingTimer;
 @property (nonatomic, assign) NSInteger timeout;
+/*** 缓存记录的播放时间，避免出现多次 toast ***/
+@property (nonatomic, assign) NSInteger seekTimeCache;
 
 @end
 
@@ -118,6 +120,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         self.enableBrightnessAdjust = NO;
         self.userTriggeredPause     = NO;
         self.backgroundColor = [UIColor blackColor];
+        self.seekTimeCache          = 0;
     }
     return self;
 }
@@ -168,6 +171,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     self.playerItem         = nil;
     self.seekTime           = 0;
+    self.seekTimeCache      = 0;
     self.playTask.seekTime  = 0;
     self.feasibleTime       = 0;
     if (self.timeObserver) {
@@ -292,7 +296,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /**
  导向至某个时间点（包括滑块的拖拽/记录上次保存的时间点等）
 
- @param timestamp 视频某个时间点
+ @param timestamp 视频某个时间点（todo: 应该直接传进来 CMTime 结构体，更精确地表示时间）
  @param completionHandler 完成回调
  */
 - (void)seekToTimestamp:(CGFloat)timestamp completionHandler:(void (^)(BOOL))completionHandler {
@@ -303,15 +307,13 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         // 构造一个移动到某一个时间点的结构体
         CMTime cmTimestamp = CMTimeMakeWithSeconds(timestamp, self.player.currentItem.duration.timescale);
         __weak typeof(self) weakSelf = self;
-        // 精确定位
-        [self.player seekToTime:cmTimestamp toleranceBefore:CMTimeMake(1, 1) toleranceAfter:CMTimeMake(1, 1) completionHandler:^(BOOL finished) {
+        // 定位
+        [self.player seekToTime:cmTimestamp toleranceBefore:CMTimeMake(1, self.player.currentItem.duration.timescale) toleranceAfter:CMTimeMake(1, self.player.currentItem.duration.timescale) completionHandler:^(BOOL finished) {
             [weakSelf.playerPanel endLoadingAnimation];
             if (completionHandler) {
                 completionHandler(finished);
             }
-            if (!self.isPaused) {
-                [weakSelf.player play];
-            }
+            [weakSelf.player play];
             [weakSelf.playerPanel replayerEndSliding];
             weakSelf.seekTime = 0;
             weakSelf.dragging = NO;
@@ -494,8 +496,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     dispatch_source_set_event_handler(self.loadingTimer, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (weakSelf.timeout >= ReplayerTaskFailToContinuePlayingMaxTimeout) {
-                weakSelf.error = YES;
-                [weakSelf resetReplayer];
+                [weakSelf doPause];
+                weakSelf.state = ReplayerCurrentStateFailedToLoad;
                 return;
             }
         });
@@ -508,7 +510,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 #pragma mark - KVO
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
     if (object == self.player.currentItem) {
         // 监听 playerItem 的当前状态
         if ([keyPath isEqualToString:ReplayerItemObservingStatus]) {
@@ -517,12 +519,17 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 [self layoutIfNeeded];
                 // 视频资源准备完毕，将播放layer添加至播放器layer
                 [self.layer insertSublayer:self.playerLayer atIndex:0];
+                self.state = ReplayerCurrentStatePlaying;
                 // 视频资源准备完毕后再生成平移手势
+                [self removeGestureRecognizer:self.panGesture];
                 [self addGestureRecognizer:self.panGesture];
                 // 外部的继续时间
                 if (self.seekTime) {
-                    [self seekToTimestamp:self.seekTime completionHandler:NULL];
-                    [self.playerPanel toastFromSeekTime:self.seekTime];
+                    if (self.seekTimeCache != self.seekTime) {
+                        [self.playerPanel toastFromSeekTime:self.seekTime];
+                        self.seekTimeCache = self.seekTime;
+                    }
+                    [self seekToTimestamp:self.seekTime completionHandler:nil];
                 }
             } else if (self.player.currentItem.status == AVPlayerItemStatusFailed) {
                 self.state = ReplayerCurrentStateFailedToLoad;
@@ -844,8 +851,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self doPause];
         if (self.state == ReplayerCurrentStatePlaying) {
             self.state = ReplayerCurrentStatePaused;
-        } else if (self.state == ReplayerCurrentStateFailedToLoad) {
-            [self replayerPanel:self.playerPanel failToLoadOrBuffer:nil];
         }
     } else {
         // 播放完毕后走重置播放器流程
@@ -1071,8 +1076,10 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     _playTask = playTask;
     [self.playerPanel sendReplayerTask:_playTask];
     
+    if (_playTask.seekTime) {
+        self.seekTime = _playTask.seekTime;
+    }
     self.streamingURL = _playTask.streamingURL;
-    self.seekTime = _playTask.seekTime;
     self.videoCapacity = _playTask.videoCapacity;
     self.checkCellular = _playTask.isCheckCellularEnable;
     self.videoIdentifier = _playTask.videoIdentifier;
@@ -1168,6 +1175,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 - (void)setError:(BOOL)error {
     _error = error;
     if (_error) {
+        [self resetReplayer];
         [self.playerPanel replayerUnableToResumePlayingWithReason:ReplayerUnableToResumeReasonBufferEmpty];
         // 视频播放错误时，保存错误前的播放进度
         if (self.cachePlayback && self.videoIdentifier) {

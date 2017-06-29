@@ -1,5 +1,4 @@
 language: objective-c
-osx_image: xcode8
 script: xcodebuild -workspace ReplayerDemo.xcworkspace -scheme ReplayerDemo -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
 notifications:
   email:
