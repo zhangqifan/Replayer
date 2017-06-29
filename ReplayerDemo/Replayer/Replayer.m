@@ -136,6 +136,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self.player removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
     }
+    
+    NSLog(@"%s",__func__);
 }
 
 - (void)layoutSubviews {
@@ -178,10 +180,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self.player removeTimeObserver:self.timeObserver];
         self.timeObserver   = nil;
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.playerLayer removeFromSuperlayer];
     [self.player replaceCurrentItemWithPlayerItem:nil];
-    [self removeGestureRecognizer:self.tapOnceGesture];
     [self removeGestureRecognizer:self.doubleTapGesture];
     [self removeGestureRecognizer:self.panGesture];
     self.player             = nil;
@@ -238,9 +238,11 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 添加手势 ***/
 - (void)p_addGestures {
     // 单击
+    [self removeGestureRecognizer:self.tapOnceGesture];
     [self addGestureRecognizer:self.tapOnceGesture];
     
     // 双击
+    [self removeGestureRecognizer:self.doubleTapGesture];
     [self addGestureRecognizer:self.doubleTapGesture];
     
     // 延迟响应
@@ -313,7 +315,9 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
             if (completionHandler) {
                 completionHandler(finished);
             }
-            [weakSelf.player play];
+            if (!weakSelf.isPaused) {
+                [weakSelf.player play];
+            }
             [weakSelf.playerPanel replayerEndSliding];
             weakSelf.seekTime = 0;
             weakSelf.dragging = NO;
@@ -573,6 +577,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         } else {
             [self.playerPanel replayerPanelDisappears];
         }
+    } else {
+        [self revealReplayViews];
     }
 }
 
@@ -810,6 +816,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
  */
 - (void)revealReplayViews {
     self.state = ReplayerCurrentStateCompleted;
+    [self removeCurrentTask];
 }
 
 /**
@@ -1068,6 +1075,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     if (_streamingURL && _streamingURL.length > 0) {
         [self p_addDeviceNotifications];
         [self p_addGestures];
+        
+        [self.playerPanel replayerPanelShows];
     }
 }
 
@@ -1137,7 +1146,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self p_addObserversOnPlayerItem];
     } else {
         [self p_removeObserversOnEmptyPlayerItem];
-        [self.playerPanel replayerPanelShows];
+//        [self.playerPanel replayerPanelShows];
         _playerItem = playerItem;
     }
 }

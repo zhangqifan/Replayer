@@ -455,7 +455,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     self.replayDescLabel.hidden = NO;
     self.replayButton.hidden = NO;
     [self replayerTransformsPlayButtonStatus:NO];
-    [self replayerPanelShows];
+    [self activatePanel];
     [self endLoadingAnimation];
 }
 
@@ -507,8 +507,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         NSString *dragTime = [NSString stringWithFormat:@"%@ / %@",nowTime,totalTime];;
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:dragTime];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 164, 36, 1) range:NSMakeRange(0, nowTime.length)];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(0, nowTime.length)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 0.6) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
         self.draggedTimeLabel.attributedText = attrStr;
         self.draggedTimeLabel.textAlignment = NSTextAlignmentCenter;
         [self.draggedProgress setProgress:slideValue animated:NO];
@@ -529,8 +529,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         NSString *dragTime = [NSString stringWithFormat:@"%@ / %@",nowTime,totalTime];;
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:dragTime];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 164, 36, 1) range:NSMakeRange(0, nowTime.length)];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(0, nowTime.length)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 0.6) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
         self.draggedTimeLabel.attributedText = attrStr;
         self.draggedTimeLabel.textAlignment = NSTextAlignmentCenter;
         [self.draggedProgress setProgress:slideValue animated:NO];
@@ -943,7 +943,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 - (ReplayerTrackSlider *)playTrack {
     if (!_playTrack) {
         _playTrack = [[ReplayerTrackSlider alloc] init];
-        _playTrack.playedTintColor = RGBA(255, 164, 36, 1);
+        _playTrack.playedTintColor = RGBA(255, 255, 255, 1);
         _playTrack.bufferedTintColor = RGBA(255, 255, 255, 0.6);
         _playTrack.trackTintColor = RGBA(255, 255, 255, 0.3);
         [_playTrack setSliderBlock:GetBundleAsset(@"replayer_track_point") forState:UIControlStateNormal];
@@ -993,7 +993,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (!_loadingView) {
         _loadingView = [[MMMaterialDesignSpinner alloc] init];
         _loadingView.lineWidth = 1.5f;
-        _loadingView.tintColor = RGBA(255, 164, 36, 1);
+        _loadingView.tintColor = RGBA(255, 255, 255, 1);
     }
     return _loadingView;
 }
@@ -1025,9 +1025,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         _replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_replayButton setTitle:@"重新播放" forState:UIControlStateNormal];
         [_replayButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-        [_replayButton setTitleColor:RGBA(255, 164, 36, 1) forState:UIControlStateNormal];
+        [_replayButton setTitleColor:RGBA(255, 255, 255, 1) forState:UIControlStateNormal];
         _replayButton.layer.cornerRadius = 17.0*kScale;
-        _replayButton.layer.borderColor = RGBA(255, 164, 36, 1).CGColor;
+        _replayButton.layer.borderColor = RGBA(255, 255, 255, 1).CGColor;
         _replayButton.layer.borderWidth = 1;
         [_replayButton addTarget:self action:@selector(replayerToReplayTheTask:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -1050,9 +1050,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         _failedButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_failedButton setTitle:@"重 试" forState:UIControlStateNormal];
         [_failedButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-        [_failedButton setTitleColor:RGBA(255, 164, 36, 1) forState:UIControlStateNormal];
+        [_failedButton setTitleColor:RGBA(255, 255, 255, 1) forState:UIControlStateNormal];
         _failedButton.layer.cornerRadius = 17.0*kScale;
-        _failedButton.layer.borderColor = RGBA(255, 164, 36, 1).CGColor;
+        _failedButton.layer.borderColor = RGBA(255, 255, 255, 1).CGColor;
         _failedButton.layer.borderWidth = 1;
         [_failedButton addTarget:self action:@selector(replayerFailToLoadOrBufferTheTask:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -1128,9 +1128,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         _donotCareCellularButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_donotCareCellularButton setTitle:@"继 续" forState:UIControlStateNormal];
         [_donotCareCellularButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-        [_donotCareCellularButton setTitleColor:RGBA(255, 164, 36, 1) forState:UIControlStateNormal];
+        [_donotCareCellularButton setTitleColor:RGBA(255, 255, 255, 1) forState:UIControlStateNormal];
         _donotCareCellularButton.layer.cornerRadius = 17.0*kScale;
-        _donotCareCellularButton.layer.borderColor = RGBA(255, 164, 36, 1).CGColor;
+        _donotCareCellularButton.layer.borderColor = RGBA(255, 255, 255, 1).CGColor;
         _donotCareCellularButton.layer.borderWidth = 1;
         [_donotCareCellularButton addTarget:self action:@selector(passToUseCellularAction:) forControlEvents:UIControlEventTouchUpInside];
     }
