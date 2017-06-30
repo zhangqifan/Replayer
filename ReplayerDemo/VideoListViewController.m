@@ -8,6 +8,7 @@
 
 #import "VideoListViewController.h"
 #import "ReplayerViewController.h"
+#import "Masonry.h"
 
 static NSString * const videoCellIdentifier = @"videoCell";
 
@@ -26,7 +27,15 @@ static NSString * const videoCellIdentifier = @"videoCell";
     // setup display
     [self.view addSubview:self.videoTableView];
     
+    [self.videoTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
     self.title = @"Replayer 测试视频列表";
+}
+
+- (BOOL)shouldAutorotate {
+    return NO;
 }
 
 #pragma mark - Setup Video List
@@ -84,7 +93,7 @@ static NSString * const videoCellIdentifier = @"videoCell";
 
 - (UITableView *)videoTableView {
     if (!_videoTableView) {
-        _videoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) style:UITableViewStyleGrouped];
+        _videoTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         _videoTableView.delegate = self;
         _videoTableView.dataSource = self;
         [_videoTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:videoCellIdentifier];

@@ -182,6 +182,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     }
     [self.playerLayer removeFromSuperlayer];
     [self.player replaceCurrentItemWithPlayerItem:nil];
+    [self removeGestureRecognizer:self.tapOnceGesture];
     [self removeGestureRecognizer:self.doubleTapGesture];
     [self removeGestureRecognizer:self.panGesture];
     self.player             = nil;
@@ -664,11 +665,10 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 - (void)doubleTapAction:(UIGestureRecognizer *)gesture {
     [self.playerPanel replayerPanelShows];
+    self.userTriggeredPause = !self.isPaused;
     if (self.isPaused) {
-        self.userTriggeredPause = NO;
         [self doPlay];
     } else {
-        self.userTriggeredPause = YES;
         [self doPause];
     }
 }
@@ -823,14 +823,18 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
  */
 - (void)continuePlaying {
     if (self.player.currentItem == nil) {
+        // 此时若无播放任务
+        [self.playerPanel resetReplayerPanel];
+        self.playTask = _playTask;
         
         if (self.cachePlayback && self.videoIdentifier) {
             self.seekTime = self.feasibleTime = [ReplayerPlaybackCache fetchPlaybackMomentByVideoIdentifier:self.videoIdentifier];
         }
         
         [self configureReplayer];
+    } else {
+        [self doPlay];
     }
-    [self doPlay];
 }
 
 /**
@@ -983,7 +987,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 加载或缓冲失败 ***/
 - (void)replayerPanel:(UIView *)replayerPanel failToLoadOrBuffer:(id)sender {
     // 重置播放器 & 重置播放器样式 & 重新加载任务 & 设置播放器尝试播放
-    [self resetReplayer];
     [self.playerPanel resetReplayerPanel];
     self.playTask = _playTask;
     

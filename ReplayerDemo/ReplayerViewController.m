@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong) Replayer *replayer;
 @property (nonatomic, strong) ReplayerTask *replayerTask;
-//@property (nonatomic, strong) ReplayerPanel
 
 @end
 
@@ -90,6 +89,25 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)replayerDidDetectNetworkStatusChange:(NSString *)networkStatus withPlayedTime:(CGFloat)playedTime {
+    if ([networkStatus isEqualToString:@"WWAN"]) {
+        [self.replayer pause];
+        UIAlertController *networkAlert = [UIAlertController alertControllerWithTitle:@"您正在使用流量观看视频，是否继续？" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消观看" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+        UIAlertAction *goonAction = [UIAlertAction actionWithTitle:@"继续观看" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self.replayer continuePlaying];
+        }];
+        [networkAlert addAction:cancelAction];
+        [networkAlert addAction:goonAction];
+        
+        [self presentViewController:networkAlert animated:YES completion:^{
+            [self.replayer removeCurrentTask];
+        }];
+    }
+}
+
 #pragma mark - Getter
 
 - (ReplayerTask *)replayerTask {
@@ -106,7 +124,6 @@
             // 从视频第20秒开始播放
             _replayerTask.seekTime = 20;
         }
-        
     }
     return _replayerTask;
 }
