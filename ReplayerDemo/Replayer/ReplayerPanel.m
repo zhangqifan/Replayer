@@ -137,8 +137,6 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         
         [self addSubview:self.preImageView];
         
-        [self addSubview:self.loadingView];
-        
         [self addSubview:self.forwardView];
         [self.forwardView addSubview:self.forwardImageView];
         [self.forwardView addSubview:self.draggedTimeLabel];
@@ -152,6 +150,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         [self addSubview:self.replayButton];
         [self addSubview:self.failedDescLabel];
         [self addSubview:self.failedButton];
+        
+        [self addSubview:self.loadingView];
         
         // 设定控件约束
         [self p_setupLayout];
@@ -453,7 +453,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     self.replayDescLabel.hidden = NO;
     self.replayButton.hidden = NO;
     [self replayerTransformsPlayButtonStatus:NO];
-    [self activatePanel];
+    [self replayerPanelShows];
     [self endLoadingAnimation];
 }
 

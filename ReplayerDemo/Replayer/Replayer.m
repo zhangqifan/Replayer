@@ -188,7 +188,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     self.tapOnceGesture     = nil;
     self.doubleTapGesture   = nil;
     self.panGesture         = nil;
-    self.error              = NO;
 }
 
 /** 
@@ -331,20 +330,12 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*** 进入播放状态 ***/
 - (void)doPlay {
-    // 如果已经播放完毕，此时点击播放按钮则重新加载播放器
-    if (self.isEndStreaming) {
-        self.endStreaming = NO;
-        [self.playerPanel resetReplayerPanel];
-        self.playTask = _playTask;
-        [self doPlay];
-    } else {
-        [self.playerPanel replayerTransformsPlayButtonStatus:YES];
-        if (self.state == ReplayerCurrentStatePaused) {
-            self.state = ReplayerCurrentStatePlaying;
-        }
-        self.paused = NO;
-        [self.player play];
+    [self.playerPanel replayerTransformsPlayButtonStatus:YES];
+    if (self.state == ReplayerCurrentStatePaused) {
+        self.state = ReplayerCurrentStatePlaying;
     }
+    self.paused = NO;
+    [self.player play];
 }
 
 /*** 进入暂停状态 ***/
@@ -568,6 +559,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*! 视频已经播放完毕 */
 - (void)taskDidPlayInCompletion:(NSNotification *)noti {
+    self.state = ReplayerCurrentStateCompleted;
     self.endStreaming = YES;
     self.paused = YES;
     if (delegateRespondsCache.replayerDidFinishTask) {
@@ -580,6 +572,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     } else {
         [self revealReplayViews];
     }
+    [self resetReplayer];
 }
 
 /*! 设备旋转监听 */
@@ -815,8 +808,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
  通知播放器显示重新播放系列视图
  */
 - (void)revealReplayViews {
-    self.state = ReplayerCurrentStateCompleted;
-    [self removeCurrentTask];
+    [self.playerPanel replayerDidEndStreaming];
 }
 
 /**
@@ -862,12 +854,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     } else {
         // 播放完毕后走重置播放器流程
         if (self.isEndStreaming) {
-            [self resetReplayer];
-            [self configureReplayer];
-            if (delegateRespondsCache.replayerDidReplayTask) {
-                [delegate replayerDidReplayTask:self];
-            }
-        } else if (self.error) {
+            [self replayerPanel:self.playerPanel replayAction:nil];
+        } else if (self.hasError) {
             [self replayerPanel:self.playerPanel failToLoadOrBuffer:nil];
         } else {
             [self doPlay];
@@ -911,12 +899,14 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 重播事件 ***/
 - (void)replayerPanel:(UIView *)replayerPanel replayAction:(id)sender {
     if (self.isEndStreaming) {
-        [self resetReplayer];
+        [self.playerPanel resetReplayerPanel];
+        self.playTask = _playTask;
         [self configureReplayer];
     }
     if (delegateRespondsCache.replayerDidReplayTask) {
         [delegate replayerDidReplayTask:self];
     }
+    self.endStreaming = NO;
 }
 
 /*** 锁定屏幕操作 ***/
@@ -1128,8 +1118,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     } else if (state == ReplayerCurrentStatePlaying || state == ReplayerCurrentStateBuffering) {
         // 只用于隐藏视频开头的预览图
         [self.playerPanel playWithCurrentTask];
-    } else if (state == ReplayerCurrentStateCompleted) {
-        [self.playerPanel replayerDidEndStreaming];
     } else if (state == ReplayerCurrentStatePaused) {
         
     }
@@ -1144,7 +1132,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self p_addObserversOnPlayerItem];
     } else {
         [self p_removeObserversOnEmptyPlayerItem];
-//        [self.playerPanel replayerPanelShows];
         _playerItem = playerItem;
     }
 }

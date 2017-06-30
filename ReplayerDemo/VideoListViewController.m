@@ -36,7 +36,7 @@ static NSString * const videoCellIdentifier = @"videoCell";
     if (indexPath.section == 0) {
         videoCell.textLabel.text = [NSString stringWithFormat:@"HLS 测试视频 - %@",[self.videoTypeArray objectAtIndex:indexPath.row]];
     } else {
-        videoCell.textLabel.text = [NSString stringWithFormat:@"视频控制样式 %ld",indexPath.row+1];
+        videoCell.textLabel.text = [NSString stringWithFormat:@"视频控制样式 %ld （未完成）",indexPath.row+1];
     }
     
     videoCell.textLabel.font = [UIFont systemFontOfSize:14.0f];
@@ -96,7 +96,7 @@ static NSString * const videoCellIdentifier = @"videoCell";
 
 - (NSArray<NSString *> *)videoTypeArray {
     if (!_videoTypeArray) {
-        _videoTypeArray = @[@"只有基础的播放/暂停功能",@"具有完整功能",@"添加了播放结束后的模拟业务",@"本地视频",@"从某个时间点继续播放"];
+        _videoTypeArray = @[@"基础播放/暂停功能",@"完整功能",@"播放结束后的模拟业务",@"播放本地视频",@"从某个时间点继续播放"];
     }
     return _videoTypeArray;
 }
