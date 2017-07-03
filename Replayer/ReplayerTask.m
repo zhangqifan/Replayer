@@ -10,4 +10,14 @@
 
 @implementation ReplayerTask
 
+// 默认的 task 配置
+- (instancetype)init {
+    if (self = [super init]) {
+        _cachePlayback          = NO;
+        _checkCellularEnable    = NO;
+        _seekTime               = 0;
+    }
+    return self;
+}
+
 @end

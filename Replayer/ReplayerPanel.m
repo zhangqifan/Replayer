@@ -8,11 +8,8 @@
 
 #import "ReplayerPanel.h"
 #import "ReplayerComposer.h"
-#import "ReplayerTrackSlider.h"
-#import <MMMaterialDesignSpinner/MMMaterialDesignSpinner.h>
-#import <Toast/UIView+Toast.h>
 
-#define kScale [UIScreen mainScreen].bounds.size.width/375.0
+#define kScale ScreenWidth/375.0
 
 static const CGFloat ReplayerUpperViewHeight            = 40.0f;
 static const CGFloat ReplayerBelowViewHeight            = 40.0f;
@@ -107,7 +104,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** 视频是否播放完毕 ***/
 @property (nonatomic, assign, getter=isEndStreaming)    BOOL endStreaming;
 /*** 播放错误 ***/
-@property (nonatomic, assign, getter=isInError)          BOOL error;
+@property (nonatomic, assign, getter=isInError)         BOOL error;
 
 /*** 控制板拿到的播放任务 ***/
 @property (nonatomic, strong) ReplayerTask *playTask;
@@ -174,7 +171,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         make.top.equalTo(self.containerView.mas_top);
         make.left.equalTo(self.containerView.mas_left);
         make.right.equalTo(self.containerView.mas_right);
-        make.height.mas_equalTo(20+ReplayerUpperViewHeight);
+        make.height.mas_equalTo(ReplayerUpperViewHeight);
     }];
     
     [self.belowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -196,7 +193,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         make.left.equalTo(self.upperView.mas_left).offset(10);
         make.height.mas_equalTo(40);
         make.width.mas_equalTo(35);
-        make.centerY.equalTo(self.upperView).offset(10);
+        make.centerY.equalTo(self.upperView);
     }];
     
     [self.backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -234,7 +231,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     }];
     
     [self.durationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.belowView.mas_right).offset(-10);
+        make.right.equalTo(self.fullScreenButton.mas_left);
         make.width.mas_equalTo(55);
         make.centerY.equalTo(self.playButton.mas_centerY);
     }];
@@ -342,7 +339,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     self.activatePanel = YES;
     self.upperView.alpha = 1.0f;
     self.belowView.alpha = 1.0f;
-    [ReplayerBrightness sharedInstance].statusBarHidden = NO;
+    [ReplayerStatusBarManager sharedInstance].statusBarHidden = NO;
 }
 
 /*** 隐藏控制板 ***/
@@ -350,7 +347,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     self.activatePanel = NO;
     self.upperView.alpha = 0.0f;
     self.belowView.alpha = 0.0f;
-    [ReplayerBrightness sharedInstance].statusBarHidden = YES;
+    [ReplayerStatusBarManager sharedInstance].statusBarHidden = YES;
 }
 
 /*** 开启自动隐藏控制板功能 ***/
@@ -402,8 +399,6 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 /*** 将视频任务给控制板呈现数据，标题/时长 等 ***/
 - (void)sendReplayerTask:(ReplayerTask *)task {
-    self.fullScreenButton.hidden = YES;     // 默认全屏，不需要切换，暂时不启用
-    self.fullScreen = YES;
     if (!task.coverImage && !task.coverImageURL) {
         self.preImageView.alpha = 0.0f;
     }
@@ -487,9 +482,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     
     self.forwardView.hidden = NO;
     if (isForward) {
-        self.forwardImageView.image = [UIImage imageNamed:@"replayer_fastforward"];
+        self.forwardImageView.image = GetBundleAsset(@"replayer_fast_forward");
     } else {
-        self.forwardImageView.image = [UIImage imageNamed:@"replayer_fastbackward"];
+        self.forwardImageView.image = GetBundleAsset(@"replayer_fast_backward");
     }
     
     self.dragging = YES;
@@ -510,11 +505,11 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         NSString *dragTime = [NSString stringWithFormat:@"%@ / %@",nowTime,totalTime];;
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:dragTime];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 164, 36, 1) range:NSMakeRange(0, nowTime.length)];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(0, nowTime.length)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 0.6) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
         self.draggedTimeLabel.attributedText = attrStr;
         self.draggedTimeLabel.textAlignment = NSTextAlignmentCenter;
-        [self.draggedProgress setProgress:slideValue animated:YES];
+        [self.draggedProgress setProgress:slideValue animated:NO];
         
     } else {
         int nowSecond   = (int)currentSecond % 60;
@@ -532,11 +527,11 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         NSString *dragTime = [NSString stringWithFormat:@"%@ / %@",nowTime,totalTime];;
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:dragTime];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 164, 36, 1) range:NSMakeRange(0, nowTime.length)];
-        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 1) range:NSMakeRange(0, nowTime.length)];
+        [attrStr addAttribute:NSForegroundColorAttributeName value:RGBA(255, 255, 255, 0.6) range:NSMakeRange(nowTime.length+1, totalTime.length+2)];
         self.draggedTimeLabel.attributedText = attrStr;
         self.draggedTimeLabel.textAlignment = NSTextAlignmentCenter;
-        [self.draggedProgress setProgress:slideValue animated:YES];
+        [self.draggedProgress setProgress:slideValue animated:NO];
     }
 }
 
@@ -615,9 +610,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         int nowMinute   = (int)(seekTime / 60) % 60;
 
         if (self.isFullScreen) {
-            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d，从此处继续播放",nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d，从此处继续播放",nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         } else {
-            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d处继续播放",nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d处继续播放",nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         }
     } else {
         int nowSecond   = (int)seekTime % 60;
@@ -625,9 +620,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         int nowHour     = (int)seekTime / 3600;
         
         if (self.isFullScreen) {
-            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d:%02d，从此处继续播放",nowHour,nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d:%02d，从此处继续播放",nowHour,nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         } else {
-            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d:%02d处继续播放",nowHour,nowMinute,nowSecond] duration:2.0f position:CSToastPositionBottom style:style];
+            [self makeToast:[NSString stringWithFormat:@"从%02d:%02d:%02d处继续播放",nowHour,nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         }
     }
 }
@@ -649,6 +644,24 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** 是否进入了全屏模式 ***/
 - (void)replayerDidBecomeFullScreen:(BOOL)isFullScreen {
     self.fullScreen = isFullScreen;
+    self.fullScreenButton.selected = isFullScreen;
+    [self.upperView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.fullScreen) {
+            make.height.mas_equalTo(ReplayerUpperViewHeight+20);
+        } else {
+            make.height.mas_equalTo(ReplayerUpperViewHeight);
+        }
+    }];
+    
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.fullScreen) {
+            make.centerY.equalTo(self.upperView).offset(10);
+        } else {
+            make.centerY.equalTo(self.upperView);
+        }
+    }];
+    
+    [self.videoTitleLabel updateConstraintsIfNeeded];
 }
 
 /*** 使用流量提醒 ***/
@@ -656,7 +669,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (useCellular) {
         self.usingCellularView.hidden = NO;
         self.upperView.hidden = NO;
-        [ReplayerBrightness sharedInstance].statusBarHidden = NO;
+        [ReplayerStatusBarManager sharedInstance].statusBarHidden = NO;
     }
 }
 
@@ -753,9 +766,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 /*** trackSlider 准备开始滑动 ***/
 - (void)trackSliderTouchBegan:(UISlider *)trackSlider {
     [self replayerPanelCancelAutoChangeStatus];
-    [ReplayerBrightness sharedInstance].statusBarHidden = NO;
-    // 播放完毕或者播放错误时禁用进度条
-    if (self.isEndStreaming || !self.isInError) { return; }
+    [ReplayerStatusBarManager sharedInstance].statusBarHidden = NO;
     if (self.delegate && [self.delegate respondsToSelector:@selector(replayerPanel:progressBarTouchBegan:)]) {
         [self.delegate replayerPanel:self progressBarTouchBegan:trackSlider];
     }
@@ -824,6 +835,18 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     }
 }
 
+// 播放是否结束
+- (void)setEndStreaming:(BOOL)endStreaming {
+    _endStreaming = endStreaming;
+    self.playTrack.userInteractionEnabled = !_endStreaming;
+}
+
+// 播放是否出现错误
+- (void)setError:(BOOL)error {
+    _error = error;
+    self.playTrack.userInteractionEnabled = !_error;
+}
+
 #pragma mark - 各类控制板控件的 lazy load
 
 - (UIView *)containerView {
@@ -844,7 +867,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 - (UIImageView *)backImageView {
     if (!_backImageView) {
-        _backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+        _backImageView = [[UIImageView alloc] initWithImage:GetBundleAsset(@"replayer_back")];
         _backImageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _backImageView;
@@ -882,7 +905,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 - (UIImageView *)upperGradient {
     if (!_upperGradient) {
-        _upperGradient = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"upper-gradient"]];
+        _upperGradient = [[UIImageView alloc] initWithImage:GetBundleAsset(@"upper-gradient")];
         _upperGradient.contentMode = UIViewContentModeScaleToFill;
     }
     return _upperGradient;
@@ -890,7 +913,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 - (UIImageView *)belowGradient {
     if (!_belowGradient) {
-        _belowGradient = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"below-gradient"]];
+        _belowGradient = [[UIImageView alloc] initWithImage:GetBundleAsset(@"below-gradient")];
         _belowGradient.contentMode = UIViewContentModeScaleToFill;
     }
     return _belowGradient;
@@ -899,8 +922,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 - (UIButton *)playButton {
     if (!_playButton) {
         _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playButton setImage:[UIImage imageNamed:@"replayer_play"] forState:UIControlStateNormal];
-        [_playButton setImage:[UIImage imageNamed:@"replayer_pause"] forState:UIControlStateSelected];
+        [_playButton setImage:GetBundleAsset(@"replayer_play") forState:UIControlStateNormal];
+        [_playButton setImage:GetBundleAsset(@"replayer_pause") forState:UIControlStateSelected];
         [_playButton addTarget:self action:@selector(playButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playButton;
@@ -919,11 +942,11 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 - (ReplayerTrackSlider *)playTrack {
     if (!_playTrack) {
         _playTrack = [[ReplayerTrackSlider alloc] init];
-        _playTrack.playedTintColor = RGBA(255, 164, 36, 1);
+        _playTrack.playedTintColor = RGBA(255, 255, 255, 1);
         _playTrack.bufferedTintColor = RGBA(255, 255, 255, 0.6);
         _playTrack.trackTintColor = RGBA(255, 255, 255, 0.3);
-        [_playTrack setSliderBlock:[UIImage imageNamed:@"replayer_trackpoint"] forState:UIControlStateNormal];
-        [_playTrack setSliderBlock:[UIImage imageNamed:@"replayer_trackpoint"] forState:UIControlStateHighlighted];
+        [_playTrack setSliderBlock:GetBundleAsset(@"replayer_track_point") forState:UIControlStateNormal];
+        [_playTrack setSliderBlock:GetBundleAsset(@"replayer_track_point") forState:UIControlStateHighlighted];
         
         [_playTrack.playedTrack addTarget:self action:@selector(trackSliderTouchBegan:) forControlEvents:UIControlEventTouchDown];
         [_playTrack.playedTrack addTarget:self action:@selector(trackSliderValueDidChange:) forControlEvents:UIControlEventValueChanged];
@@ -958,8 +981,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (!_fullScreenButton) {
         _fullScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_fullScreenButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-        [_fullScreenButton setImage:[UIImage imageNamed:@"fullScreen"] forState:UIControlStateNormal];
-        [_fullScreenButton setImage:[UIImage imageNamed:@"minimize"] forState:UIControlStateSelected];
+        [_fullScreenButton setImage:GetBundleAsset(@"replayer_full_screen") forState:UIControlStateNormal];
+        [_fullScreenButton setImage:GetBundleAsset(@"replayer_16_9") forState:UIControlStateSelected];
         [_fullScreenButton addTarget:self action:@selector(enterFullScreenAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _fullScreenButton;
@@ -969,7 +992,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (!_loadingView) {
         _loadingView = [[MMMaterialDesignSpinner alloc] init];
         _loadingView.lineWidth = 1.5f;
-        _loadingView.tintColor = RGBA(255, 164, 36, 1);
+        _loadingView.tintColor = RGBA(255, 255, 255, 1);
     }
     return _loadingView;
 }
@@ -978,8 +1001,8 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (!_lockButton) {
         _lockButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_lockButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-        [_lockButton setImage:[UIImage imageNamed:@"fullScreen"] forState:UIControlStateNormal];
-        [_lockButton setImage:[UIImage imageNamed:@"minimize"] forState:UIControlStateSelected];
+        [_lockButton setImage:GetBundleAsset(@"replayer_full_screen") forState:UIControlStateNormal];
+        [_lockButton setImage:GetBundleAsset(@"replayer_16_9") forState:UIControlStateSelected];
         [_lockButton addTarget:self action:@selector(lockAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _lockButton;
@@ -1001,9 +1024,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         _replayButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_replayButton setTitle:@"重新播放" forState:UIControlStateNormal];
         [_replayButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-        [_replayButton setTitleColor:RGBA(255, 164, 36, 1) forState:UIControlStateNormal];
+        [_replayButton setTitleColor:RGBA(255, 255, 255, 1) forState:UIControlStateNormal];
         _replayButton.layer.cornerRadius = 17.0*kScale;
-        _replayButton.layer.borderColor = RGBA(255, 164, 36, 1).CGColor;
+        _replayButton.layer.borderColor = RGBA(255, 255, 255, 1).CGColor;
         _replayButton.layer.borderWidth = 1;
         [_replayButton addTarget:self action:@selector(replayerToReplayTheTask:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -1026,9 +1049,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         _failedButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_failedButton setTitle:@"重 试" forState:UIControlStateNormal];
         [_failedButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-        [_failedButton setTitleColor:RGBA(255, 164, 36, 1) forState:UIControlStateNormal];
+        [_failedButton setTitleColor:RGBA(255, 255, 255, 1) forState:UIControlStateNormal];
         _failedButton.layer.cornerRadius = 17.0*kScale;
-        _failedButton.layer.borderColor = RGBA(255, 164, 36, 1).CGColor;
+        _failedButton.layer.borderColor = RGBA(255, 255, 255, 1).CGColor;
         _failedButton.layer.borderWidth = 1;
         [_failedButton addTarget:self action:@selector(replayerFailToLoadOrBufferTheTask:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -1104,9 +1127,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         _donotCareCellularButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_donotCareCellularButton setTitle:@"继 续" forState:UIControlStateNormal];
         [_donotCareCellularButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-        [_donotCareCellularButton setTitleColor:RGBA(255, 164, 36, 1) forState:UIControlStateNormal];
+        [_donotCareCellularButton setTitleColor:RGBA(255, 255, 255, 1) forState:UIControlStateNormal];
         _donotCareCellularButton.layer.cornerRadius = 17.0*kScale;
-        _donotCareCellularButton.layer.borderColor = RGBA(255, 164, 36, 1).CGColor;
+        _donotCareCellularButton.layer.borderColor = RGBA(255, 255, 255, 1).CGColor;
         _donotCareCellularButton.layer.borderWidth = 1;
         [_donotCareCellularButton addTarget:self action:@selector(passToUseCellularAction:) forControlEvents:UIControlEventTouchUpInside];
     }

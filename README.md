@@ -13,6 +13,7 @@ Replayer 是一款基于 **[AVFoundation](https://developer.apple.com/documentat
 
 * 支持横竖屏切换，支持入口单一横屏模式；
 * *支持视频清晰度调节；
+* *支持视频播放前缓冲占位图；
 * 支持网络状态监测，支持在非 WiFi 环境下播放视频前的播放拦截，以及播放过程中的网络状况切换提示；
 * 支持断点播放；
 * 支持加载失败 / 加载超时 / 缓冲中断的错误处理；
@@ -44,7 +45,7 @@ Replayer 是一款基于 **[AVFoundation](https://developer.apple.com/documentat
 * [X] ~~添加 Travis.CI 支持~~
 
 
-* [ ] 在 CocoaPods 中注册库
+* [ ] 在 CocoaPods / Carthage 中注册库
 
 
 * [ ] 编写一个 Demo 示例

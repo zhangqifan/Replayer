@@ -9,8 +9,6 @@
 #import "Replayer.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "Reachability.h"
-#import "ReplayerBrightness.h"
 #import "ReplayerComposer.h"
 
 /*! 播放器手势滑动方向 */
@@ -30,7 +28,7 @@ static ReplayerItemObservingProperty const ReplayerItemObservingLikelyToKeepUp  
 
 /*! 加载超时时间 */
 typedef NSInteger ReplayerTaskProperty;
-static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 60;
+static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 5;
 
 @interface Replayer () <UIGestureRecognizerDelegate>
 
@@ -60,6 +58,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 @property (nonatomic, assign) BOOL checkCellular;       // 是否需要检测流量播放
 @property (nonatomic, assign) BOOL denyCellular;        // 用户是否同意使用流量播放
 @property (nonatomic, strong) NSNumber *videoCapacity;
+@property (nonatomic, assign) BOOL cachePlayback;
+@property (nonatomic, strong) NSString *videoIdentifier;
 
 /*** 亮度/音量变化视图 ***/
 @property (nonatomic, strong) ReplayerBrightness *brightnessAdjust;
@@ -87,11 +87,13 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 检测网络状态 ***/
 @property (nonatomic) Reachability *networkFlag;
 @property (nonatomic, assign) NetworkStatus networkStatus;
-/*** 记录真实播放时间 ***/
+/*** 记录真实播放时间 todo: change to CMTime struct ***/
 @property (nonatomic, assign) CGFloat feasibleTime;
 /*** 加载时间定时器 ***/
 @property (nonatomic, strong) dispatch_source_t loadingTimer;
 @property (nonatomic, assign) NSInteger timeout;
+/*** 缓存记录的播放时间，避免出现多次 toast ***/
+@property (nonatomic, assign) NSInteger seekTimeCache;
 
 @end
 
@@ -117,8 +119,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         self.enableVolumeAdjust     = NO;
         self.enableBrightnessAdjust = NO;
         self.userTriggeredPause     = NO;
-        self.fullScreen             = YES;      /// fullscreen: 以后把默认的去掉
         self.backgroundColor = [UIColor blackColor];
+        self.seekTimeCache          = 0;
     }
     return self;
 }
@@ -134,6 +136,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self.player removeTimeObserver:self.timeObserver];
         self.timeObserver = nil;
     }
+    
+    NSLog(@"%s",__func__);
 }
 
 - (void)layoutSubviews {
@@ -169,13 +173,13 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     self.playerItem         = nil;
     self.seekTime           = 0;
+    self.seekTimeCache      = 0;
     self.playTask.seekTime  = 0;
     self.feasibleTime       = 0;
     if (self.timeObserver) {
         [self.player removeTimeObserver:self.timeObserver];
         self.timeObserver   = nil;
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.playerLayer removeFromSuperlayer];
     [self.player replaceCurrentItemWithPlayerItem:nil];
     [self removeGestureRecognizer:self.tapOnceGesture];
@@ -185,7 +189,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     self.tapOnceGesture     = nil;
     self.doubleTapGesture   = nil;
     self.panGesture         = nil;
-    self.error              = NO;
 }
 
 /** 
@@ -293,7 +296,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /**
  导向至某个时间点（包括滑块的拖拽/记录上次保存的时间点等）
 
- @param timestamp 视频某个时间点
+ @param timestamp 视频某个时间点（todo: 应该直接传进来 CMTime 结构体，更精确地表示时间）
  @param completionHandler 完成回调
  */
 - (void)seekToTimestamp:(CGFloat)timestamp completionHandler:(void (^)(BOOL))completionHandler {
@@ -304,19 +307,20 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         // 构造一个移动到某一个时间点的结构体
         CMTime cmTimestamp = CMTimeMakeWithSeconds(timestamp, self.player.currentItem.duration.timescale);
         __weak typeof(self) weakSelf = self;
-        // 精确定位
+        // 定位
         [self.player seekToTime:cmTimestamp toleranceBefore:CMTimeMake(1, self.player.currentItem.duration.timescale) toleranceAfter:CMTimeMake(1, self.player.currentItem.duration.timescale) completionHandler:^(BOOL finished) {
             [weakSelf.playerPanel endLoadingAnimation];
             if (completionHandler) {
                 completionHandler(finished);
             }
-            if (!self.isPaused) {
+            if (!weakSelf.isPaused) {
                 [weakSelf.player play];
             }
             [weakSelf.playerPanel replayerEndSliding];
+            weakSelf.seekTime = 0;
             weakSelf.dragging = NO;
             
-            if ([self bufferedDuration] <= 0.0) {
+            if (!weakSelf.playerItem.isPlaybackLikelyToKeepUp) {
                 weakSelf.state = ReplayerCurrentStateBuffering;
             }
         }];
@@ -325,20 +329,12 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*** 进入播放状态 ***/
 - (void)doPlay {
-    // 如果已经播放完毕，此时点击播放按钮则重新加载播放器
-    if (self.isEndStreaming) {
-        self.endStreaming = NO;
-        [self.playerPanel resetReplayerPanel];
-        self.playTask = _playTask;
-        [self doPlay];
-    } else {
-        [self.playerPanel replayerTransformsPlayButtonStatus:YES];
-        if (self.state == ReplayerCurrentStatePaused) {
-            self.state = ReplayerCurrentStatePlaying;
-        }
-        self.paused = NO;
-        [self.player play];
+    [self.playerPanel replayerTransformsPlayButtonStatus:YES];
+    if (self.state == ReplayerCurrentStatePaused) {
+        self.state = ReplayerCurrentStatePlaying;
     }
+    self.paused = NO;
+    [self.player play];
 }
 
 /*** 进入暂停状态 ***/
@@ -361,17 +357,17 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 //    [[[UIApplication sharedApplication] keyWindow] addSubview:self];
     
     [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsZero);
+        make.edges.equalTo(self.superview);
     }];
     
     [self setNeedsLayout];
     
+    self.fullScreen = YES;
+    [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
+    
     [UIView animateWithDuration:0.3 animations:^{
         [self layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        self.fullScreen = YES;
-        [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
-    }];
+    } completion:NULL];
 }
 
 /*** 退出全屏 ***/
@@ -379,21 +375,21 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     if (!self.isFullScreen) { return; }
     
+    // be able to edit: 修改 auto layout，使之保持和初期约束一致
     [self mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.superview);
-        make.left.equalTo(self.superview);
-        make.right.equalTo(self.superview);
+        make.top.mas_equalTo(20);
+        make.leading.and.trailing.equalTo(self.superview);
         make.height.equalTo(self.superview.mas_width).multipliedBy(9.0/16.0);
     }];
     
     [self setNeedsLayout];
     
+    self.fullScreen = NO;
+    [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
+    
     [UIView animateWithDuration:0.3 animations:^{
         [self layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        self.fullScreen = NO;
-        [self.playerPanel replayerDidBecomeFullScreen:self.isFullScreen];
-    }];
+    } completion:NULL];
 }
 
 /*** 强制旋转屏幕 ***/
@@ -419,16 +415,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     // 返回缓冲总进度 已播放 + 未播放已缓冲
     return (NSTimeInterval)startSeconds + durationSeconds;
-}
-
-/*** 获取未播放的缓冲长度 ***/
-- (NSTimeInterval)bufferedDuration {
-    NSArray *loadedTimeRanges = [self.player.currentItem loadedTimeRanges];
-    CMTimeRange timeRange = [[loadedTimeRanges firstObject] CMTimeRangeValue];
-    
-    double durationSeconds  = CMTimeGetSeconds(timeRange.duration);
-    
-    return durationSeconds;
 }
 
 /*** 在网络情况差的情况下，多缓冲的操作 ***/
@@ -460,7 +446,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 网络监听到变化时更新视图操作 ***/
 - (void)updateInterfaceWithReachability:(Reachability *)reachability {
     self.networkStatus = [reachability currentReachabilityStatus];
-    NSLog(@"当前网络状态 : %ld",(long)self.networkStatus);
     switch (self.networkStatus) {
         case NotReachable:
             if (!self.denyCellular) {
@@ -486,6 +471,9 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 if (!self.denyCellular) {
                     if (delegateRespondsCache.replayerDidDetectNetworkStatusChange) {
                         [delegate replayerDidDetectNetworkStatusChange:@"WWAN" withPlayedTime:self.feasibleTime];
+                        if (self.cachePlayback && self.videoIdentifier) {
+                            [ReplayerPlaybackCache setDownPlaybackCurrentMoment:self.feasibleTime byVideoIdentifier:self.videoIdentifier];
+                        }
                     }
                 }
             }
@@ -502,8 +490,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     dispatch_source_set_event_handler(self.loadingTimer, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (weakSelf.timeout >= ReplayerTaskFailToContinuePlayingMaxTimeout) {
-                weakSelf.error = YES;
-                [weakSelf resetReplayer];
+                [weakSelf doPause];
+                weakSelf.state = ReplayerCurrentStateFailedToLoad;
                 return;
             }
         });
@@ -516,7 +504,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 #pragma mark - KVO
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
     if (object == self.player.currentItem) {
         // 监听 playerItem 的当前状态
         if ([keyPath isEqualToString:ReplayerItemObservingStatus]) {
@@ -525,25 +513,16 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 [self layoutIfNeeded];
                 // 视频资源准备完毕，将播放layer添加至播放器layer
                 [self.layer insertSublayer:self.playerLayer atIndex:0];
+                self.state = ReplayerCurrentStatePlaying;
                 // 视频资源准备完毕后再生成平移手势
                 [self addGestureRecognizer:self.panGesture];
-                [self p_addGestures];
-                // 开启自动关闭控制板
-                [self.playerPanel replayerPanelShows];
                 // 外部的继续时间
                 if (self.seekTime) {
-                    [self seekToTimestamp:self.seekTime completionHandler:NULL];
-                    [self.playerPanel toastFromSeekTime:self.seekTime];
-                } else {
-                    if (self.feasibleTime) {
-                        [self seekToTimestamp:self.feasibleTime completionHandler:NULL];
-                        self.networkStatus==ReachableViaWWAN ? : [self.playerPanel toastFromSeekTime:self.feasibleTime];
+                    if (self.seekTimeCache != self.seekTime) {
+                        [self.playerPanel toastFromSeekTime:self.seekTime];
+                        self.seekTimeCache = self.seekTime;
                     }
-                }
-                if (!self.playerItem.isPlaybackLikelyToKeepUp) {
-                    self.state = ReplayerCurrentStateBuffering;
-                } else {
-                    self.state = ReplayerCurrentStatePlaying;
+                    [self seekToTimestamp:self.seekTime completionHandler:nil];
                 }
             } else if (self.player.currentItem.status == AVPlayerItemStatusFailed) {
                 self.state = ReplayerCurrentStateFailedToLoad;
@@ -559,13 +538,13 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 self.state = ReplayerCurrentStatePlaying;
             }
         } else if ([keyPath isEqualToString:ReplayerItemObservingBufferEmpty]) {
-            NSLog(@"BUFFER EMPTY.");
             // 缓冲为空的情况下，尽量多缓冲一些时间
             if (self.playerItem.isPlaybackBufferEmpty) {
                 self.state = ReplayerCurrentStateBuffering;
-                if (self.networkStatus != NotReachable) {
-                    [self continueBufferInSeconds];
-                }
+                // 暂时不启用继续缓冲功能
+//                if (self.networkStatus != NotReachable) {
+//                    [self continueBufferInSeconds];
+//                }
             }
         } else if ([keyPath isEqualToString:ReplayerItemObservingBufferFull]) {
             // 此参数会缓冲至一定时间时收到事件，并不一定是整个视频完全缓冲完毕
@@ -578,6 +557,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*! 视频已经播放完毕 */
 - (void)taskDidPlayInCompletion:(NSNotification *)noti {
+    self.state = ReplayerCurrentStateCompleted;
     self.endStreaming = YES;
     self.paused = YES;
     if (delegateRespondsCache.replayerDidFinishTask) {
@@ -587,7 +567,10 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         } else {
             [self.playerPanel replayerPanelDisappears];
         }
+    } else {
+        [self revealReplayViews];
     }
+    [self resetReplayer];
 }
 
 /*! 设备旋转监听 */
@@ -604,17 +587,15 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         }];
     }
     if (deviceOrientation == UIDeviceOrientationPortrait) {
-        return;
-        /// fullscreen: 现在只做横屏
-//        [self becomeDefaultScaleOnScreen];
-//        
-//        [self.brightnessAdjust removeFromSuperview];
-//        [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessAdjust];
-//        [self.brightnessAdjust mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.width.height.mas_equalTo(155);
-//            make.centerX.equalTo(self.brightnessAdjust.superview);
-//            make.centerY.equalTo(self.brightnessAdjust.superview);
-//        }];
+        [self becomeDefaultScaleOnScreen];
+        
+        [self.brightnessAdjust removeFromSuperview];
+        [[UIApplication sharedApplication].keyWindow addSubview:self.brightnessAdjust];
+        [self.brightnessAdjust mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(155);
+            make.centerX.equalTo(self.brightnessAdjust.superview);
+            make.centerY.equalTo(self.brightnessAdjust.superview);
+        }];
     }
 }
 
@@ -643,17 +624,22 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*! 应用即将进入后台 */
 - (void)appWillBeResignedToBackground {
-    [self doPause];
-    self.state = ReplayerCurrentStatePaused;
+    if (!self.hasError || !self.isEndStreaming) {
+        [self doPause];
+        self.state = ReplayerCurrentStatePaused;
+        if (self.cachePlayback && self.videoIdentifier) {
+            [ReplayerPlaybackCache setDownPlaybackCurrentMoment:self.feasibleTime byVideoIdentifier:self.videoIdentifier];
+        }
+    }
     // 进入后台处理
     if (delegateRespondsCache.replayerWillResignToBackground) {
-        [delegate replayer:self willBeResignedToBackgroundToSavePlayedTime:self.feasibleTime];
+        [delegate replayerWillBeResignedToBackground:self];
     }
 }
 
 /*! 应用回到前台 */
 - (void)appDidBecomeActiveToForeground {
-    if (!self.isUserTriggeredPause) {
+    if (!self.isUserTriggeredPause && !self.hasError && !self.isEndStreaming) {
         [self.playerPanel replayerPanelShows];
         [self doPlay];
         self.state = ReplayerCurrentStatePlaying;
@@ -677,13 +663,14 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 }
 
 - (void)doubleTapAction:(UIGestureRecognizer *)gesture {
-    [self.playerPanel replayerPanelShows];
-    if (self.isPaused) {
-        self.userTriggeredPause = NO;
-        [self doPlay];
-    } else {
-        self.userTriggeredPause = YES;
-        [self doPause];
+    if (gesture) {
+        [self.playerPanel replayerPanelShows];
+        self.userTriggeredPause = !self.isPaused;
+        if (self.isPaused) {
+            [self doPlay];
+        } else {
+            [self doPause];
+        }
     }
 }
 
@@ -822,7 +809,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
  通知播放器显示重新播放系列视图
  */
 - (void)revealReplayViews {
-    self.state = ReplayerCurrentStateCompleted;
+    [self.playerPanel replayerDidEndStreaming];
 }
 
 /**
@@ -837,9 +824,18 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
  */
 - (void)continuePlaying {
     if (self.player.currentItem == nil) {
+        // 此时若无播放任务
+        [self.playerPanel resetReplayerPanel];
+        self.playTask = _playTask;
+        
+        if (self.cachePlayback && self.videoIdentifier) {
+            self.seekTime = self.feasibleTime = [ReplayerPlaybackCache fetchPlaybackMomentByVideoIdentifier:self.videoIdentifier];
+        }
+        
         [self configureReplayer];
+    } else {
+        [self doPlay];
     }
-    [self doPlay];
 }
 
 /**
@@ -863,12 +859,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     } else {
         // 播放完毕后走重置播放器流程
         if (self.isEndStreaming) {
-            [self resetReplayer];
-            [self configureReplayer];
-            if (delegateRespondsCache.replayerDidReplayTask) {
-                [delegate replayerDidReplayTask:self];
-            }
-        } else if (self.error) {
+            [self replayerPanel:self.playerPanel replayAction:nil];
+        } else if (self.hasError) {
             [self replayerPanel:self.playerPanel failToLoadOrBuffer:nil];
         } else {
             [self doPlay];
@@ -889,40 +881,37 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         } else {
             [self forceToChangeDeviceOrientation:UIInterfaceOrientationPortrait];
         }
-        
-        !fullScreenButton.isSelected ? [self becomeFullScreen] : [self becomeDefaultScaleOnScreen];
     }
 }
 
 /*** 返回按钮触发事件 ***/
 - (void)replayerPanel:(UIView *)replayerPanel goBackAction:(id)sender {
-    [self doPause];
-    if (delegateRespondsCache.replayerContainerShouldBeGoBack) {
-        // 回退后停止状态栏的变化
-        [self.playerPanel replayerPanelCancelAutoChangeStatus];
-        [self.delegate replayer:self goBackWithPlayedTime:self.feasibleTime];
+    if (self.isFullScreen) {
+        [self forceToChangeDeviceOrientation:UIInterfaceOrientationPortrait];
+        [self becomeDefaultScaleOnScreen];
+    } else {
+        [self doPause];
+        if (delegateRespondsCache.replayerContainerShouldBeGoBack) {
+            if (self.cachePlayback && self.videoIdentifier) {
+                [ReplayerPlaybackCache setDownPlaybackCurrentMoment:self.feasibleTime byVideoIdentifier:self.videoIdentifier];
+            }
+            [self.playerPanel replayerPanelCancelAutoChangeStatus];
+            [self.delegate replayerDidGoBack:self];
+        }
     }
-    //// fullscreen: 可调整全屏时启用，现在默认全屏直接 dismiss
-//    if (self.isFullScreen) {
-//        [self forceToChangeDeviceOrientation:UIInterfaceOrientationPortrait];
-//        [self becomeDefaultScaleOnScreen];
-//    } else {
-//        [self doPause];
-//        if (delegateRespondsCache.replayerContainerShouldBeGoBack) {
-//            [self.delegate replayerContainerShouldBeGoBack];
-//        }
-//    }
 }
 
 /*** 重播事件 ***/
 - (void)replayerPanel:(UIView *)replayerPanel replayAction:(id)sender {
     if (self.isEndStreaming) {
-        [self resetReplayer];
+        [self.playerPanel resetReplayerPanel];
+        self.playTask = _playTask;
         [self configureReplayer];
     }
     if (delegateRespondsCache.replayerDidReplayTask) {
         [delegate replayerDidReplayTask:self];
     }
+    self.endStreaming = NO;
 }
 
 /*** 锁定屏幕操作 ***/
@@ -999,9 +988,14 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 加载或缓冲失败 ***/
 - (void)replayerPanel:(UIView *)replayerPanel failToLoadOrBuffer:(id)sender {
     // 重置播放器 & 重置播放器样式 & 重新加载任务 & 设置播放器尝试播放
-    [self resetReplayer];
     [self.playerPanel resetReplayerPanel];
     self.playTask = _playTask;
+    
+    // 加载之前播放的断点
+    if (self.cachePlayback && self.videoIdentifier) {
+        self.seekTime = self.feasibleTime = [ReplayerPlaybackCache fetchPlaybackMomentByVideoIdentifier:self.videoIdentifier];
+    }
+
     [self configureReplayer];
 }
 
@@ -1058,10 +1052,10 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 - (void)setDelegate:(id<ReplayerDelegate>)pDelegate {
     if (delegate != pDelegate) {
         delegate = pDelegate;
-        delegateRespondsCache.replayerContainerShouldBeGoBack       = [delegate respondsToSelector:@selector(replayer:goBackWithPlayedTime:)];
+        delegateRespondsCache.replayerContainerShouldBeGoBack       = [delegate respondsToSelector:@selector(replayerDidGoBack:)];
         delegateRespondsCache.replayerDidFinishTask                 = [delegate respondsToSelector:@selector(replayerDidFinishTask)];
         delegateRespondsCache.replayerDidDetectNetworkStatusChange  = [delegate respondsToSelector:@selector(replayerDidDetectNetworkStatusChange:withPlayedTime:)];
-        delegateRespondsCache.replayerWillResignToBackground        = [delegate respondsToSelector:@selector(replayer:willBeResignedToBackgroundToSavePlayedTime:)];
+        delegateRespondsCache.replayerWillResignToBackground        = [delegate respondsToSelector:@selector(replayerWillBeResignedToBackground:)];
         delegateRespondsCache.replayerDidBecomeActive               = [delegate respondsToSelector:@selector(replayerDidBecomeActiveToForeground:)];
         delegateRespondsCache.replayerDidReplayTask                 = [delegate respondsToSelector:@selector(replayerDidReplayTask:)];
     }
@@ -1072,18 +1066,25 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     
     if (_streamingURL && _streamingURL.length > 0) {
         [self p_addDeviceNotifications];
+        [self p_addGestures];
+        
+        [self.playerPanel replayerPanelShows];
     }
 }
 
 - (void)setPlayTask:(ReplayerTask *)playTask {
-    NSAssert(playTask, @"需要一个视频播放任务");
+    NSAssert(playTask, @"请检查创建的视频任务是否为空，至少需要一个视频任务才能进行播放");
     _playTask = playTask;
     [self.playerPanel sendReplayerTask:_playTask];
     
+    if (_playTask.seekTime) {
+        self.seekTime = _playTask.seekTime;
+    }
     self.streamingURL = _playTask.streamingURL;
-    self.seekTime = _playTask.seekTime;
     self.videoCapacity = _playTask.videoCapacity;
     self.checkCellular = _playTask.isCheckCellularEnable;
+    self.videoIdentifier = _playTask.videoIdentifier;
+    self.cachePlayback = _playTask.isCachePlayback;
 }
 
 - (void)setPlayerPanel:(UIView *)playerPanel {
@@ -1101,9 +1102,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 - (void)setState:(ReplayerCurrentState)state {
     _state = state;
-    
-    NSLog(@"latest state : %lu",(unsigned long)_state);
-    
     // 一旦进入加载动画，就启动播放时间监听，进入加载失败的倒计时loop
     if (_state == ReplayerCurrentStateBuffering) {
         [self.playerPanel loadingAnimation];
@@ -1122,10 +1120,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     if (state == ReplayerCurrentStateFailedToLoad) {
         self.error = YES;
     } else if (state == ReplayerCurrentStatePlaying || state == ReplayerCurrentStateBuffering) {
-        // 只用于隐藏视频开头的预览图
+        // 隐藏视频开头的预览图
         [self.playerPanel playWithCurrentTask];
-    } else if (state == ReplayerCurrentStateCompleted) {
-        [self.playerPanel replayerDidEndStreaming];
     } else if (state == ReplayerCurrentStatePaused) {
         
     }
@@ -1140,7 +1136,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         [self p_addObserversOnPlayerItem];
     } else {
         [self p_removeObserversOnEmptyPlayerItem];
-        [self.playerPanel replayerPanelShows];
         _playerItem = playerItem;
     }
 }
@@ -1178,7 +1173,12 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 - (void)setError:(BOOL)error {
     _error = error;
     if (_error) {
+        [self resetReplayer];
         [self.playerPanel replayerUnableToResumePlayingWithReason:ReplayerUnableToResumeReasonBufferEmpty];
+        // 视频播放错误时，保存错误前的播放进度
+        if (self.cachePlayback && self.videoIdentifier) {
+            [ReplayerPlaybackCache setDownPlaybackCurrentMoment:self.feasibleTime byVideoIdentifier:self.videoIdentifier];
+        }
     }
 }
 
