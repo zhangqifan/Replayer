@@ -205,6 +205,7 @@
 		849AC6251F0A116200F9EC79 /* Replayer */ = {
 			isa = PBXGroup;
 			children = (
+				849AC6341F0A116200F9EC79 /* ReplayerResource.bundle */,
 				849AC6261F0A116200F9EC79 /* Reachability.h */,
 				849AC6271F0A116200F9EC79 /* Reachability.m */,
 				849AC6281F0A116200F9EC79 /* Replayer.h */,
@@ -219,7 +220,6 @@
 				849AC6311F0A116200F9EC79 /* ReplayerPanelProtocol.h */,
 				849AC6321F0A116200F9EC79 /* ReplayerPlaybackCache.h */,
 				849AC6331F0A116200F9EC79 /* ReplayerPlaybackCache.m */,
-				849AC6341F0A116200F9EC79 /* ReplayerResource.bundle */,
 				849AC6351F0A116200F9EC79 /* ReplayerStatusBarManager.h */,
 				849AC6361F0A116200F9EC79 /* ReplayerStatusBarManager.m */,
 				849AC6371F0A116200F9EC79 /* ReplayerTask.h */,
