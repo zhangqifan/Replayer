@@ -28,7 +28,7 @@ static ReplayerItemObservingProperty const ReplayerItemObservingLikelyToKeepUp  
 
 /*! 加载超时时间 */
 typedef NSInteger ReplayerTaskProperty;
-static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 60;
+static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 5;
 
 @interface Replayer () <UIGestureRecognizerDelegate>
 
@@ -238,11 +238,9 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 添加手势 ***/
 - (void)p_addGestures {
     // 单击
-    [self removeGestureRecognizer:self.tapOnceGesture];
     [self addGestureRecognizer:self.tapOnceGesture];
     
     // 双击
-    [self removeGestureRecognizer:self.doubleTapGesture];
     [self addGestureRecognizer:self.doubleTapGesture];
     
     // 延迟响应
@@ -517,7 +515,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
                 [self.layer insertSublayer:self.playerLayer atIndex:0];
                 self.state = ReplayerCurrentStatePlaying;
                 // 视频资源准备完毕后再生成平移手势
-                [self removeGestureRecognizer:self.panGesture];
                 [self addGestureRecognizer:self.panGesture];
                 // 外部的继续时间
                 if (self.seekTime) {
@@ -666,12 +663,14 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 }
 
 - (void)doubleTapAction:(UIGestureRecognizer *)gesture {
-    [self.playerPanel replayerPanelShows];
-    self.userTriggeredPause = !self.isPaused;
-    if (self.isPaused) {
-        [self doPlay];
-    } else {
-        [self doPause];
+    if (gesture) {
+        [self.playerPanel replayerPanelShows];
+        self.userTriggeredPause = !self.isPaused;
+        if (self.isPaused) {
+            [self doPlay];
+        } else {
+            [self doPause];
+        }
     }
 }
 
@@ -998,8 +997,6 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     }
 
     [self configureReplayer];
-    
-    [self p_addGestures];
 }
 
 #pragma mark - getter
