@@ -26,9 +26,9 @@ static ReplayerItemObservingProperty const ReplayerItemObservingBufferEmpty     
 static ReplayerItemObservingProperty const ReplayerItemObservingBufferFull         = @"playbackBufferFull";
 static ReplayerItemObservingProperty const ReplayerItemObservingLikelyToKeepUp     = @"playbackLikelyToKeepUp";
 
-/*! 加载超时时间 */
+/*! 加载超时时间，目前限定 1 分半 */
 typedef NSInteger ReplayerTaskProperty;
-static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 5;
+static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 90;
 
 @interface Replayer () <UIGestureRecognizerDelegate>
 

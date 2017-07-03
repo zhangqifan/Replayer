@@ -18,18 +18,18 @@
 		8431A99D1F00E8A800AEAC96 /* VideoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8431A99B1F00E8A800AEAC96 /* VideoListViewController.xib */; };
 		8431A9A11F01008E00AEAC96 /* ReplayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */; };
 		8431A9A21F01008E00AEAC96 /* ReplayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */; };
-		849AC63F1F0A116200F9EC79 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC6271F0A116200F9EC79 /* Reachability.m */; };
-		849AC6401F0A116200F9EC79 /* Replayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC6291F0A116200F9EC79 /* Replayer.m */; };
-		849AC6411F0A116200F9EC79 /* ReplayerBrightness.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC62B1F0A116200F9EC79 /* ReplayerBrightness.m */; };
-		849AC6421F0A116200F9EC79 /* ReplayerLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC62E1F0A116200F9EC79 /* ReplayerLoading.m */; };
-		849AC6431F0A116200F9EC79 /* ReplayerPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC6301F0A116200F9EC79 /* ReplayerPanel.m */; };
-		849AC6441F0A116200F9EC79 /* ReplayerPlaybackCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC6331F0A116200F9EC79 /* ReplayerPlaybackCache.m */; };
-		849AC6451F0A116200F9EC79 /* ReplayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 849AC6341F0A116200F9EC79 /* ReplayerResource.bundle */; };
-		849AC6461F0A116200F9EC79 /* ReplayerStatusBarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC6361F0A116200F9EC79 /* ReplayerStatusBarManager.m */; };
-		849AC6471F0A116200F9EC79 /* ReplayerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC6381F0A116200F9EC79 /* ReplayerTask.m */; };
-		849AC6481F0A116200F9EC79 /* ReplayerTrackSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC63A1F0A116200F9EC79 /* ReplayerTrackSlider.m */; };
-		849AC6491F0A116200F9EC79 /* UIView+ReplayerPanelProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC63C1F0A116200F9EC79 /* UIView+ReplayerPanelProtocol.m */; };
-		849AC64A1F0A116200F9EC79 /* UIWindow+GetCurrentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 849AC63E1F0A116200F9EC79 /* UIWindow+GetCurrentViewController.m */; };
+		84B81E7A1F0A45CB00A20129 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E621F0A45CB00A20129 /* Reachability.m */; };
+		84B81E7B1F0A45CB00A20129 /* Replayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E641F0A45CB00A20129 /* Replayer.m */; };
+		84B81E7C1F0A45CB00A20129 /* ReplayerBrightness.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E661F0A45CB00A20129 /* ReplayerBrightness.m */; };
+		84B81E7D1F0A45CB00A20129 /* ReplayerLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E691F0A45CB00A20129 /* ReplayerLoading.m */; };
+		84B81E7E1F0A45CB00A20129 /* ReplayerPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E6B1F0A45CB00A20129 /* ReplayerPanel.m */; };
+		84B81E7F1F0A45CB00A20129 /* ReplayerPlaybackCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E6E1F0A45CB00A20129 /* ReplayerPlaybackCache.m */; };
+		84B81E801F0A45CB00A20129 /* ReplayerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84B81E6F1F0A45CB00A20129 /* ReplayerResource.bundle */; };
+		84B81E811F0A45CB00A20129 /* ReplayerStatusBarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E711F0A45CB00A20129 /* ReplayerStatusBarManager.m */; };
+		84B81E821F0A45CB00A20129 /* ReplayerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E731F0A45CB00A20129 /* ReplayerTask.m */; };
+		84B81E831F0A45CB00A20129 /* ReplayerTrackSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E751F0A45CB00A20129 /* ReplayerTrackSlider.m */; };
+		84B81E841F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E771F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.m */; };
+		84B81E851F0A45CB00A20129 /* UIWindow+GetCurrentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B81E791F0A45CB00A20129 /* UIWindow+GetCurrentViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,31 +71,31 @@
 		8431A99E1F01008E00AEAC96 /* ReplayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerViewController.h; sourceTree = "<group>"; };
 		8431A99F1F01008E00AEAC96 /* ReplayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerViewController.m; sourceTree = "<group>"; };
 		8431A9A01F01008E00AEAC96 /* ReplayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReplayerViewController.xib; sourceTree = "<group>"; };
-		849AC6261F0A116200F9EC79 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		849AC6271F0A116200F9EC79 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		849AC6281F0A116200F9EC79 /* Replayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Replayer.h; sourceTree = "<group>"; };
-		849AC6291F0A116200F9EC79 /* Replayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Replayer.m; sourceTree = "<group>"; };
-		849AC62A1F0A116200F9EC79 /* ReplayerBrightness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerBrightness.h; sourceTree = "<group>"; };
-		849AC62B1F0A116200F9EC79 /* ReplayerBrightness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerBrightness.m; sourceTree = "<group>"; };
-		849AC62C1F0A116200F9EC79 /* ReplayerComposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerComposer.h; sourceTree = "<group>"; };
-		849AC62D1F0A116200F9EC79 /* ReplayerLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerLoading.h; sourceTree = "<group>"; };
-		849AC62E1F0A116200F9EC79 /* ReplayerLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerLoading.m; sourceTree = "<group>"; };
-		849AC62F1F0A116200F9EC79 /* ReplayerPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerPanel.h; sourceTree = "<group>"; };
-		849AC6301F0A116200F9EC79 /* ReplayerPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerPanel.m; sourceTree = "<group>"; };
-		849AC6311F0A116200F9EC79 /* ReplayerPanelProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerPanelProtocol.h; sourceTree = "<group>"; };
-		849AC6321F0A116200F9EC79 /* ReplayerPlaybackCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerPlaybackCache.h; sourceTree = "<group>"; };
-		849AC6331F0A116200F9EC79 /* ReplayerPlaybackCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerPlaybackCache.m; sourceTree = "<group>"; };
-		849AC6341F0A116200F9EC79 /* ReplayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ReplayerResource.bundle; sourceTree = "<group>"; };
-		849AC6351F0A116200F9EC79 /* ReplayerStatusBarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerStatusBarManager.h; sourceTree = "<group>"; };
-		849AC6361F0A116200F9EC79 /* ReplayerStatusBarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerStatusBarManager.m; sourceTree = "<group>"; };
-		849AC6371F0A116200F9EC79 /* ReplayerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerTask.h; sourceTree = "<group>"; };
-		849AC6381F0A116200F9EC79 /* ReplayerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerTask.m; sourceTree = "<group>"; };
-		849AC6391F0A116200F9EC79 /* ReplayerTrackSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerTrackSlider.h; sourceTree = "<group>"; };
-		849AC63A1F0A116200F9EC79 /* ReplayerTrackSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerTrackSlider.m; sourceTree = "<group>"; };
-		849AC63B1F0A116200F9EC79 /* UIView+ReplayerPanelProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ReplayerPanelProtocol.h"; sourceTree = "<group>"; };
-		849AC63C1F0A116200F9EC79 /* UIView+ReplayerPanelProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ReplayerPanelProtocol.m"; sourceTree = "<group>"; };
-		849AC63D1F0A116200F9EC79 /* UIWindow+GetCurrentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+GetCurrentViewController.h"; sourceTree = "<group>"; };
-		849AC63E1F0A116200F9EC79 /* UIWindow+GetCurrentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+GetCurrentViewController.m"; sourceTree = "<group>"; };
+		84B81E611F0A45CB00A20129 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		84B81E621F0A45CB00A20129 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		84B81E631F0A45CB00A20129 /* Replayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Replayer.h; sourceTree = "<group>"; };
+		84B81E641F0A45CB00A20129 /* Replayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Replayer.m; sourceTree = "<group>"; };
+		84B81E651F0A45CB00A20129 /* ReplayerBrightness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerBrightness.h; sourceTree = "<group>"; };
+		84B81E661F0A45CB00A20129 /* ReplayerBrightness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerBrightness.m; sourceTree = "<group>"; };
+		84B81E671F0A45CB00A20129 /* ReplayerComposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerComposer.h; sourceTree = "<group>"; };
+		84B81E681F0A45CB00A20129 /* ReplayerLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerLoading.h; sourceTree = "<group>"; };
+		84B81E691F0A45CB00A20129 /* ReplayerLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerLoading.m; sourceTree = "<group>"; };
+		84B81E6A1F0A45CB00A20129 /* ReplayerPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerPanel.h; sourceTree = "<group>"; };
+		84B81E6B1F0A45CB00A20129 /* ReplayerPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerPanel.m; sourceTree = "<group>"; };
+		84B81E6C1F0A45CB00A20129 /* ReplayerPanelProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerPanelProtocol.h; sourceTree = "<group>"; };
+		84B81E6D1F0A45CB00A20129 /* ReplayerPlaybackCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerPlaybackCache.h; sourceTree = "<group>"; };
+		84B81E6E1F0A45CB00A20129 /* ReplayerPlaybackCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerPlaybackCache.m; sourceTree = "<group>"; };
+		84B81E6F1F0A45CB00A20129 /* ReplayerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ReplayerResource.bundle; sourceTree = "<group>"; };
+		84B81E701F0A45CB00A20129 /* ReplayerStatusBarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerStatusBarManager.h; sourceTree = "<group>"; };
+		84B81E711F0A45CB00A20129 /* ReplayerStatusBarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerStatusBarManager.m; sourceTree = "<group>"; };
+		84B81E721F0A45CB00A20129 /* ReplayerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerTask.h; sourceTree = "<group>"; };
+		84B81E731F0A45CB00A20129 /* ReplayerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerTask.m; sourceTree = "<group>"; };
+		84B81E741F0A45CB00A20129 /* ReplayerTrackSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayerTrackSlider.h; sourceTree = "<group>"; };
+		84B81E751F0A45CB00A20129 /* ReplayerTrackSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayerTrackSlider.m; sourceTree = "<group>"; };
+		84B81E761F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ReplayerPanelProtocol.h"; sourceTree = "<group>"; };
+		84B81E771F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ReplayerPanelProtocol.m"; sourceTree = "<group>"; };
+		84B81E781F0A45CB00A20129 /* UIWindow+GetCurrentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+GetCurrentViewController.h"; sourceTree = "<group>"; };
+		84B81E791F0A45CB00A20129 /* UIWindow+GetCurrentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+GetCurrentViewController.m"; sourceTree = "<group>"; };
 		86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReplayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -159,7 +159,7 @@
 		8431A9471F00A89A00AEAC96 /* ReplayerDemo */ = {
 			isa = PBXGroup;
 			children = (
-				849AC6251F0A116200F9EC79 /* Replayer */,
+				84B81E601F0A45CB00A20129 /* Replayer */,
 				8431A94B1F00A89A00AEAC96 /* AppDelegate.h */,
 				8431A94C1F00A89A00AEAC96 /* AppDelegate.m */,
 				8431A9991F00E8A800AEAC96 /* VideoListViewController.h */,
@@ -202,37 +202,37 @@
 			path = ReplayerDemoUITests;
 			sourceTree = "<group>";
 		};
-		849AC6251F0A116200F9EC79 /* Replayer */ = {
+		84B81E601F0A45CB00A20129 /* Replayer */ = {
 			isa = PBXGroup;
 			children = (
-				849AC6341F0A116200F9EC79 /* ReplayerResource.bundle */,
-				849AC6261F0A116200F9EC79 /* Reachability.h */,
-				849AC6271F0A116200F9EC79 /* Reachability.m */,
-				849AC6281F0A116200F9EC79 /* Replayer.h */,
-				849AC6291F0A116200F9EC79 /* Replayer.m */,
-				849AC62A1F0A116200F9EC79 /* ReplayerBrightness.h */,
-				849AC62B1F0A116200F9EC79 /* ReplayerBrightness.m */,
-				849AC62C1F0A116200F9EC79 /* ReplayerComposer.h */,
-				849AC62D1F0A116200F9EC79 /* ReplayerLoading.h */,
-				849AC62E1F0A116200F9EC79 /* ReplayerLoading.m */,
-				849AC62F1F0A116200F9EC79 /* ReplayerPanel.h */,
-				849AC6301F0A116200F9EC79 /* ReplayerPanel.m */,
-				849AC6311F0A116200F9EC79 /* ReplayerPanelProtocol.h */,
-				849AC6321F0A116200F9EC79 /* ReplayerPlaybackCache.h */,
-				849AC6331F0A116200F9EC79 /* ReplayerPlaybackCache.m */,
-				849AC6351F0A116200F9EC79 /* ReplayerStatusBarManager.h */,
-				849AC6361F0A116200F9EC79 /* ReplayerStatusBarManager.m */,
-				849AC6371F0A116200F9EC79 /* ReplayerTask.h */,
-				849AC6381F0A116200F9EC79 /* ReplayerTask.m */,
-				849AC6391F0A116200F9EC79 /* ReplayerTrackSlider.h */,
-				849AC63A1F0A116200F9EC79 /* ReplayerTrackSlider.m */,
-				849AC63B1F0A116200F9EC79 /* UIView+ReplayerPanelProtocol.h */,
-				849AC63C1F0A116200F9EC79 /* UIView+ReplayerPanelProtocol.m */,
-				849AC63D1F0A116200F9EC79 /* UIWindow+GetCurrentViewController.h */,
-				849AC63E1F0A116200F9EC79 /* UIWindow+GetCurrentViewController.m */,
+				84B81E611F0A45CB00A20129 /* Reachability.h */,
+				84B81E621F0A45CB00A20129 /* Reachability.m */,
+				84B81E631F0A45CB00A20129 /* Replayer.h */,
+				84B81E641F0A45CB00A20129 /* Replayer.m */,
+				84B81E651F0A45CB00A20129 /* ReplayerBrightness.h */,
+				84B81E661F0A45CB00A20129 /* ReplayerBrightness.m */,
+				84B81E671F0A45CB00A20129 /* ReplayerComposer.h */,
+				84B81E681F0A45CB00A20129 /* ReplayerLoading.h */,
+				84B81E691F0A45CB00A20129 /* ReplayerLoading.m */,
+				84B81E6A1F0A45CB00A20129 /* ReplayerPanel.h */,
+				84B81E6B1F0A45CB00A20129 /* ReplayerPanel.m */,
+				84B81E6C1F0A45CB00A20129 /* ReplayerPanelProtocol.h */,
+				84B81E6D1F0A45CB00A20129 /* ReplayerPlaybackCache.h */,
+				84B81E6E1F0A45CB00A20129 /* ReplayerPlaybackCache.m */,
+				84B81E6F1F0A45CB00A20129 /* ReplayerResource.bundle */,
+				84B81E701F0A45CB00A20129 /* ReplayerStatusBarManager.h */,
+				84B81E711F0A45CB00A20129 /* ReplayerStatusBarManager.m */,
+				84B81E721F0A45CB00A20129 /* ReplayerTask.h */,
+				84B81E731F0A45CB00A20129 /* ReplayerTask.m */,
+				84B81E741F0A45CB00A20129 /* ReplayerTrackSlider.h */,
+				84B81E751F0A45CB00A20129 /* ReplayerTrackSlider.m */,
+				84B81E761F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.h */,
+				84B81E771F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.m */,
+				84B81E781F0A45CB00A20129 /* UIWindow+GetCurrentViewController.h */,
+				84B81E791F0A45CB00A20129 /* UIWindow+GetCurrentViewController.m */,
 			);
 			path = Replayer;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		C1E1D736CED4B28DEEE162A9 /* Frameworks */ = {
 			isa = PBXGroup;
@@ -354,7 +354,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				849AC6451F0A116200F9EC79 /* ReplayerResource.bundle in Resources */,
+				84B81E801F0A45CB00A20129 /* ReplayerResource.bundle in Resources */,
 				8431A9581F00A89A00AEAC96 /* LaunchScreen.storyboard in Resources */,
 				8431A99D1F00E8A800AEAC96 /* VideoListViewController.xib in Resources */,
 				8431A9A21F01008E00AEAC96 /* ReplayerViewController.xib in Resources */,
@@ -431,21 +431,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				849AC6471F0A116200F9EC79 /* ReplayerTask.m in Sources */,
+				84B81E821F0A45CB00A20129 /* ReplayerTask.m in Sources */,
 				8431A94D1F00A89A00AEAC96 /* AppDelegate.m in Sources */,
-				849AC6481F0A116200F9EC79 /* ReplayerTrackSlider.m in Sources */,
-				849AC6461F0A116200F9EC79 /* ReplayerStatusBarManager.m in Sources */,
-				849AC6431F0A116200F9EC79 /* ReplayerPanel.m in Sources */,
+				84B81E831F0A45CB00A20129 /* ReplayerTrackSlider.m in Sources */,
+				84B81E811F0A45CB00A20129 /* ReplayerStatusBarManager.m in Sources */,
+				84B81E7E1F0A45CB00A20129 /* ReplayerPanel.m in Sources */,
 				8431A9A11F01008E00AEAC96 /* ReplayerViewController.m in Sources */,
-				849AC64A1F0A116200F9EC79 /* UIWindow+GetCurrentViewController.m in Sources */,
-				849AC6441F0A116200F9EC79 /* ReplayerPlaybackCache.m in Sources */,
+				84B81E851F0A45CB00A20129 /* UIWindow+GetCurrentViewController.m in Sources */,
+				84B81E7F1F0A45CB00A20129 /* ReplayerPlaybackCache.m in Sources */,
 				8431A94A1F00A89A00AEAC96 /* main.m in Sources */,
 				8431A99C1F00E8A800AEAC96 /* VideoListViewController.m in Sources */,
-				849AC6411F0A116200F9EC79 /* ReplayerBrightness.m in Sources */,
-				849AC63F1F0A116200F9EC79 /* Reachability.m in Sources */,
-				849AC6491F0A116200F9EC79 /* UIView+ReplayerPanelProtocol.m in Sources */,
-				849AC6421F0A116200F9EC79 /* ReplayerLoading.m in Sources */,
-				849AC6401F0A116200F9EC79 /* Replayer.m in Sources */,
+				84B81E7C1F0A45CB00A20129 /* ReplayerBrightness.m in Sources */,
+				84B81E7A1F0A45CB00A20129 /* Reachability.m in Sources */,
+				84B81E841F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.m in Sources */,
+				84B81E7D1F0A45CB00A20129 /* ReplayerLoading.m in Sources */,
+				84B81E7B1F0A45CB00A20129 /* Replayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
