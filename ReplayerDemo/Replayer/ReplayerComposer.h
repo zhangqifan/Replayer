@@ -34,6 +34,6 @@
 #import "UIView+ReplayerPanelProtocol.h"
 #import "UIWindow+GetCurrentViewController.h"
 
-#import "Masonry.h"
 #import <Toast/UIView+Toast.h>
 #import <MMMaterialDesignSpinner/MMMaterialDesignSpinner.h>
+#import <Masonry/Masonry.h>
