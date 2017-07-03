@@ -627,10 +627,12 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*! 应用即将进入后台 */
 - (void)appWillBeResignedToBackground {
-    [self doPause];
-    self.state = ReplayerCurrentStatePaused;
-    if (self.cachePlayback && self.videoIdentifier) {
-        [ReplayerPlaybackCache setDownPlaybackCurrentMoment:self.feasibleTime byVideoIdentifier:self.videoIdentifier];
+    if (!self.hasError || !self.isEndStreaming) {
+        [self doPause];
+        self.state = ReplayerCurrentStatePaused;
+        if (self.cachePlayback && self.videoIdentifier) {
+            [ReplayerPlaybackCache setDownPlaybackCurrentMoment:self.feasibleTime byVideoIdentifier:self.videoIdentifier];
+        }
     }
     // 进入后台处理
     if (delegateRespondsCache.replayerWillResignToBackground) {
@@ -640,7 +642,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*! 应用回到前台 */
 - (void)appDidBecomeActiveToForeground {
-    if (!self.isUserTriggeredPause) {
+    if (!self.isUserTriggeredPause && !self.hasError && !self.isEndStreaming) {
         [self.playerPanel replayerPanelShows];
         [self doPlay];
         self.state = ReplayerCurrentStatePlaying;
@@ -996,6 +998,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     }
 
     [self configureReplayer];
+    
+    [self p_addGestures];
 }
 
 #pragma mark - getter
@@ -1119,7 +1123,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     if (state == ReplayerCurrentStateFailedToLoad) {
         self.error = YES;
     } else if (state == ReplayerCurrentStatePlaying || state == ReplayerCurrentStateBuffering) {
-        // 只用于隐藏视频开头的预览图
+        // 隐藏视频开头的预览图
         [self.playerPanel playWithCurrentTask];
     } else if (state == ReplayerCurrentStatePaused) {
         
