@@ -7,7 +7,7 @@
 //
 
 #import "ReplayerTrackSlider.h"
-#import <Masonry/Masonry.h>
+#import "Masonry.h"
 
 @class ReplayerSlider;
 
