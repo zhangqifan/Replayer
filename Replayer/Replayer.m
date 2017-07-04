@@ -723,7 +723,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (!self.denyCellular && !self.isEndStreaming) {
+    if (!self.denyCellular) {
         // 单击/双击的响应以及取消
         UITouch *touch = [touches anyObject];
         if (touch.tapCount == 1) {
