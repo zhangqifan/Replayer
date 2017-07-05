@@ -152,7 +152,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
  */
 - (void)configureReplayer {
     // 设置 AVPlayer 核心参数
-    self.playerItem = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:self.streamingURL]];
+    self.playerItem = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:[self.streamingURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
     self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     self.playerLayer.videoGravity = self.p_videoGravity;
