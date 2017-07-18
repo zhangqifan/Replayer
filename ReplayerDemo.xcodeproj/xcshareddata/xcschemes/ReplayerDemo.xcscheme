@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B686C7F40136180E360668B93312EA62"
-               BuildableName = "libPods-ReplayerDemo.a"
+               BlueprintIdentifier = "CDB5BDA286618DB79C53840619F0C43B"
+               BuildableName = "Pods_ReplayerDemo.framework"
                BlueprintName = "Pods-ReplayerDemo"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>

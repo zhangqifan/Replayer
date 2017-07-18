@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3473CFE654F64D8F6EAC7596 /* libPods-ReplayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */; };
+		175839A78AB8B1EAD271FC22 /* Pods_ReplayerDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91998E2A06B2611FCEAD9BCD /* Pods_ReplayerDemo.framework */; };
 		8431A94A1F00A89A00AEAC96 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A9491F00A89A00AEAC96 /* main.m */; };
 		8431A94D1F00A89A00AEAC96 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8431A94C1F00A89A00AEAC96 /* AppDelegate.m */; };
 		8431A9551F00A89A00AEAC96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8431A9541F00A89A00AEAC96 /* Assets.xcassets */; };
@@ -96,7 +96,7 @@
 		84B81E771F0A45CB00A20129 /* UIView+ReplayerPanelProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ReplayerPanelProtocol.m"; sourceTree = "<group>"; };
 		84B81E781F0A45CB00A20129 /* UIWindow+GetCurrentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+GetCurrentViewController.h"; sourceTree = "<group>"; };
 		84B81E791F0A45CB00A20129 /* UIWindow+GetCurrentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+GetCurrentViewController.m"; sourceTree = "<group>"; };
-		86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReplayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		91998E2A06B2611FCEAD9BCD /* Pods_ReplayerDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReplayerDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3473CFE654F64D8F6EAC7596 /* libPods-ReplayerDemo.a in Frameworks */,
+				175839A78AB8B1EAD271FC22 /* Pods_ReplayerDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +237,7 @@
 		C1E1D736CED4B28DEEE162A9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				86441F812705D56D52746CCC /* libPods-ReplayerDemo.a */,
+				91998E2A06B2611FCEAD9BCD /* Pods_ReplayerDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
