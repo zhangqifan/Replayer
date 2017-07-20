@@ -53,6 +53,9 @@
 /*** 视频因源失效/缓冲无法加载/网络故障造成的视频中途播放问题 ***/
 - (void)replayerUnableToResumePlayingWithReason:(ReplayerUnableToResumeReason)cannotResumeReason { return; }
 
+/*** 设置视频总时长 ***/
+- (void)replayerSetDuration:(CGFloat)duration { return; }
+
 /**
  滑动至当前时长
  

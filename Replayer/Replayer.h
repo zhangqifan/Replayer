@@ -83,6 +83,14 @@ typedef NS_ENUM(NSUInteger, ReplayerUnableToResumeReason) {
  */
 - (void)replayerDidDetectNetworkStatusChange:(NSString *)networkStatus withPlayedTime:(CGFloat)playedTime;
 
+/**
+ 获取视频资源后，返回资源的总时长
+ 
+ @param replayer Replayer
+ @param duration 视频总时长
+ */
+- (void)replayer:(Replayer *)replayer returnVideoFullDuration:(double)duration;
+
 @end
 
 @interface Replayer : UIView <ReplayerPanelProtocol>

@@ -107,6 +107,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         unsigned int replayerWillResignToBackground         : 1;
         unsigned int replayerDidBecomeActive                : 1;
         unsigned int replayerDidReplayTask                  : 1;
+        unsigned int replayerReturnFullVideoDuration        : 1;
     } delegateRespondsCache;
 }
 
@@ -502,6 +503,16 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     dispatch_resume(self.loadingTimer);
 }
 
+- (void)findOutVideoDuration:(CGFloat)duration {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self.playerPanel replayerSetDuration:duration];
+        if (delegateRespondsCache.replayerReturnFullVideoDuration) {
+            [delegate replayer:self returnVideoFullDuration:duration];
+        }
+    });
+}
+
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
@@ -532,6 +543,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
             NSTimeInterval buffered = [self availableLoadedTimeRanges];
             double totalSeconds = CMTimeGetSeconds(self.player.currentItem.duration);
             [self.playerPanel replayerSetBufferProgress:buffered / totalSeconds];
+            [self findOutVideoDuration:totalSeconds];
             
         } else if ([keyPath isEqualToString:ReplayerItemObservingLikelyToKeepUp]) {
             if (self.playerItem.isPlaybackLikelyToKeepUp && self.state == ReplayerCurrentStateBuffering) {
@@ -1058,6 +1070,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
         delegateRespondsCache.replayerWillResignToBackground        = [delegate respondsToSelector:@selector(replayerWillBeResignedToBackground:)];
         delegateRespondsCache.replayerDidBecomeActive               = [delegate respondsToSelector:@selector(replayerDidBecomeActiveToForeground:)];
         delegateRespondsCache.replayerDidReplayTask                 = [delegate respondsToSelector:@selector(replayerDidReplayTask:)];
+        delegateRespondsCache.replayerReturnFullVideoDuration       = [delegate respondsToSelector:@selector(replayer:returnVideoFullDuration:)];
     }
 }
 

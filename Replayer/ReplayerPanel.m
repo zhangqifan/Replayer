@@ -470,6 +470,22 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     [self replayerLoadedDisabledTask];
 }
 
+/*** 设置视频总时长 ***/
+- (void)replayerSetDuration:(CGFloat)duration {
+    int hour = duration / 3600;
+    if (hour == 0) {
+        int seconds     = (int)duration % 60;
+        int minutes     = (int)(duration /60) % 60;
+        self.durationLabel.text     = [NSString stringWithFormat:@"%02d:%02d",minutes,seconds];
+        
+    } else {
+        int seconds     = (int)duration % 60;
+        int minutes     = (int)(duration /60) % 60;
+        int hours       = (int)duration / 3600;
+        self.durationLabel.text     = [NSString stringWithFormat:@"%02d:%02d:%02d",hours,minutes,seconds];
+    }
+}
+
 /**
  滑动至当前时长
  
