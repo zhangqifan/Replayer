@@ -30,7 +30,7 @@
 #import "ReplayerPanelProtocol.h"
 #import "ReplayerTrackSlider.h"
 #import "ReplayerPlaybackCache.h"
-#import "Reachability.h"
+#import "REPReachability.h"
 
 #import "UIView+ReplayerPanelProtocol.h"
 #import "UIWindow+GetCurrentViewController.h"

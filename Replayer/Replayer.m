@@ -85,7 +85,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 /*** 视频是否存在播放错误 ***/
 @property (nonatomic, assign, getter=hasError) BOOL error;
 /*** 检测网络状态 ***/
-@property (nonatomic) Reachability *networkFlag;
+@property (nonatomic) REPReachability *networkFlag;
 @property (nonatomic, assign) NetworkStatus networkStatus;
 /*** 记录真实播放时间 todo: change to CMTime struct ***/
 @property (nonatomic, assign) CGFloat feasibleTime;
@@ -445,7 +445,7 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 }
 
 /*** 网络监听到变化时更新视图操作 ***/
-- (void)updateInterfaceWithReachability:(Reachability *)reachability {
+- (void)updateInterfaceWithReachability:(REPReachability *)reachability {
     self.networkStatus = [reachability currentReachabilityStatus];
     switch (self.networkStatus) {
         case NotReachable:
@@ -663,8 +663,8 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
 
 /*! 网络环境变化 */
 - (void)reachabilityDidChange:(NSNotification *)noti {
-    Reachability *currentReach = [noti object];
-    NSParameterAssert([currentReach isKindOfClass:[Reachability class]]);
+    REPReachability *currentReach = [noti object];
+    NSParameterAssert([currentReach isKindOfClass:[REPReachability class]]);
     [self updateInterfaceWithReachability:currentReach];
 }
 
@@ -1174,9 +1174,9 @@ static ReplayerTaskProperty const ReplayerTaskFailToContinuePlayingMaxTimeout = 
     _checkCellular = checkCellular;
     self.denyCellular = _checkCellular;
     if (_checkCellular) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange:) name:kREPReachabilityChangedNotification object:nil];
         
-        self.networkFlag = [Reachability reachabilityForInternetConnection];
+        self.networkFlag = [REPReachability reachabilityForInternetConnection];
         [self.networkFlag startNotifier];
         
         [self updateInterfaceWithReachability:self.networkFlag];

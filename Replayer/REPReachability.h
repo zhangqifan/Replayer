@@ -1,30 +1,24 @@
-/*
- Copyright (C) 2016 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
- 
- Abstract:
- Basic demonstration of how to use the SystemConfiguration Reachablity APIs.
- */
+//
+//  REPReachability.h
+//  Pods
+//
+//  Created by qifan.zhang on 2017/7/25.
+//
+//  Avoid to conflict with origin Reachability.
 
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <netinet/in.h>
 
-
 typedef enum : NSInteger {
-	NotReachable = 0,
-	ReachableViaWiFi,
-	ReachableViaWWAN
+    NotReachable = 0,
+    ReachableViaWiFi,
+    ReachableViaWWAN
 } NetworkStatus;
 
-#pragma mark IPv6 Support
-//Reachability fully support IPv6.  For full details, see ReadMe.md.
+extern NSString *kREPReachabilityChangedNotification;
 
-
-extern NSString *kReachabilityChangedNotification;
-
-
-@interface Reachability : NSObject
+@interface REPReachability : NSObject
 
 /*!
  * Use to check the reachability of a given host name.
@@ -60,5 +54,3 @@ extern NSString *kReachabilityChangedNotification;
 - (BOOL)connectionRequired;
 
 @end
-
-
