@@ -2,7 +2,7 @@
 //  REPReachability.h
 //  Pods
 //
-//  Created by qifan.zhang on 2017/7/25.
+//  Created by zhangqifan on 2017/7/25.
 //
 //  Avoid to conflict with origin Reachability.
 

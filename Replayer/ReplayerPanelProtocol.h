@@ -1,13 +1,12 @@
 //
 //  ReplayerPanelProtocol.h
-//  PlayerInCaffe
 //
-//  Created by qifan.zhang on 2017/5/31.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/5/31.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 /*
-    @discussion  控制视频的代理方法
+ @discussion  控制视频的代理方法
  */
 @protocol ReplayerPanelProtocol <NSObject>
 
@@ -64,3 +63,4 @@
 - (void)replayerPanelPassToUseCellular:(UIView *)replayerPanel;
 
 @end
+

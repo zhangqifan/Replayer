@@ -2,8 +2,8 @@
 //  ReplayerViewController.h
 //  ReplayerDemo
 //
-//  Created by qifan.zhang on 2017/6/26.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/6/26.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

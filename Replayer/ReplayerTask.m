@@ -1,9 +1,8 @@
 //
 //  ReplayerTask.m
-//  PlayerInCaffe
 //
-//  Created by qifan.zhang on 2017/5/31.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/5/31.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 #import "ReplayerTask.h"
@@ -13,11 +12,13 @@
 // 默认的 task 配置
 - (instancetype)init {
     if (self = [super init]) {
-        _cachePlayback          = NO;
-        _checkCellularEnable    = NO;
-        _seekTime               = 0;
+        _cachePlayback              = NO;
+        _checkCellularEnable        = NO;
+        _seekTime                   = 0;
+        _statusBarHiddenInPortrait  = YES;
     }
     return self;
 }
 
 @end
+

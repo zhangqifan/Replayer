@@ -1,9 +1,8 @@
 //
 //  ReplayerTask.h
-//  PlayerInCaffe
 //
-//  Created by qifan.zhang on 2017/5/31.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/5/31.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -43,6 +42,9 @@ NS_ASSUME_NONNULL_BEGIN
 /*** 视频大小，单位为 MB ***/
 @property (nonatomic, strong) NSNumber *videoCapacity;
 
+/*** 是否允许状态栏在竖屏模式下也执行隐藏，默认为 YES ***/
+@property (nonatomic, assign) BOOL statusBarHiddenInPortrait;
+
 /*!
  清晰度调整数据块 (功能未启用)
  @e.g. @{@"高清720P" : @"https://720p.url", @"标清320P" : @"https://320p.url"}
@@ -52,3 +54,4 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+

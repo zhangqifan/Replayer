@@ -1,9 +1,8 @@
 //
 //  Replayer.h
-//  PlayerInCaffe
 //
-//  Created by qifan.zhang on 2017/5/31.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/5/31.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -47,41 +46,60 @@ typedef NS_ENUM(NSUInteger, ReplayerUnableToResumeReason) {
 @optional
 
 /**
- 进入后台
+ 播放器是否处于正在播放的状态
+ 
+ @param isPlaying 正在播放的状态
+ */
+- (void)replayerIsPlaying:(BOOL)isPlaying;
 
+/**
+ 播放器已经获取视频资源并开始播放
+ */
+- (void)replayerActuallyStreaming;
+
+/**
+ 进入后台
+ 
  @param replayer Replayer
  */
 - (void)replayerWillBeResignedToBackground:(Replayer *)replayer;
 
 /**
  进入前台
-
+ 
  @param replayer Replayer
  */
 - (void)replayerDidBecomeActiveToForeground:(Replayer *)replayer;
 
 /**
  播放完毕
-
- @return NO  在播放完毕和显示重新播放视图前插入任意的业务逻辑，完成业务后调用 - revealReplayViews; 通知播放器显示重新播放按钮
-         YES 常规显示重新播放按钮视图
+ 
+ @param finishPolicy 播放完毕策略 在播放完毕和显示重新播放视图前插入任意的业务逻辑，完成业务后调用 finishPolicy block 通知播放器显示重新播放按钮
  */
-- (BOOL)replayerDidFinishTask;
+- (void)replayerDidFinishTask:(void (^)(void))finishPolicy;
 
 /**
  播放器重新开始播放
-
+ 
  @param replayer Replayer
  */
 - (void)replayerDidReplayTask:(Replayer *)replayer;
 
 /**
  网络情况变化的回调
-
+ 
  @param networkStatus   @"WWAN" / @"WIFI" / @"NOTREACHABLE" 三种返回
  @param playedTime      已经播放的时间
  */
 - (void)replayerDidDetectNetworkStatusChange:(NSString *)networkStatus withPlayedTime:(CGFloat)playedTime;
+
+/**
+ 继续使用蜂窝数据进行视频播放
+ 
+ @param replayer Replayer
+ @discussion 该方法响应的前提是 ReplayerTask 中的 checkCellularEnable 为 YES，默认不响应
+ */
+- (void)replayerContinuesToPlayDespiteUsingCellularData:(Replayer *)replayer;
 
 /**
  获取视频资源后，返回资源的总时长
@@ -111,7 +129,7 @@ typedef NS_ENUM(NSUInteger, ReplayerUnableToResumeReason) {
 
 /**
  指定播放器的控制层视图和播放的视频任务
-
+ 
  @param panelView 控制层视图，可为 nil
  @param replayerTask 需要播放的任务结构
  @discussion 如使用自定义控制层视图请参照 UIView+ReplayerPanelProtocol 抽象分类，传入 nil 默认使用 ReplayerPanelProtocol 视图，或使用 - replayerUsesDefaultPanelWithTask: 方法
@@ -120,7 +138,7 @@ typedef NS_ENUM(NSUInteger, ReplayerUnableToResumeReason) {
 
 /**
  使用默认的播放器控制层视图，指定播放的视频任务
-
+ 
  @param replayerTask 需要播放的任务结构
  @discussion 见 - replayerControlsByPanel:replayerTask: 方法
  */

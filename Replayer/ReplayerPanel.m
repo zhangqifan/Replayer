@@ -1,9 +1,8 @@
 //
 //  ReplayerPanel.m
-//  PlayerInCaffe
 //
-//  Created by qifan.zhang on 2017/5/31.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/5/31.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 #import "ReplayerPanel.h"
@@ -118,7 +117,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 - (instancetype)init {
     self = [super init];
     if (self) {
-    
+        
         [self addSubview:self.containerView];
         [self.containerView insertSubview:self.upperView atIndex:2];
         [self.containerView insertSubview:self.belowView atIndex:0];
@@ -290,7 +289,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(24);
     }];
-
+    
     [self.draggedTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.forwardImageView.mas_bottom).offset(10);
         make.left.equalTo(self.forwardView).offset(5);
@@ -347,7 +346,11 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     self.activatePanel = NO;
     self.upperView.alpha = 0.0f;
     self.belowView.alpha = 0.0f;
-    [ReplayerStatusBarManager sharedInstance].statusBarHidden = YES;
+    if (self.isFullScreen) {
+        [ReplayerStatusBarManager sharedInstance].statusBarHidden = YES;
+    } else {
+        [ReplayerStatusBarManager sharedInstance].statusBarHidden = self.playTask.statusBarHiddenInPortrait;
+    }
 }
 
 /*** 开启自动隐藏控制板功能 ***/
@@ -624,7 +627,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
     if (hour == 0) {
         int nowSecond   = (int)seekTime % 60;
         int nowMinute   = (int)(seekTime / 60) % 60;
-
+        
         if (self.isFullScreen) {
             [self makeToast:[NSString stringWithFormat:@"您上次观看至%02d:%02d，从此处继续播放",nowMinute,nowSecond] duration:3.0f position:CSToastPositionBottom style:style];
         } else {
@@ -682,11 +685,9 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 
 /*** 使用流量提醒 ***/
 - (void)replayerDidUseCellular:(BOOL)useCellular {
-    if (useCellular) {
-        self.usingCellularView.hidden = NO;
-        self.upperView.hidden = NO;
-        [ReplayerStatusBarManager sharedInstance].statusBarHidden = NO;
-    }
+    self.usingCellularView.hidden = !useCellular;
+    self.upperView.hidden = NO;
+    [ReplayerStatusBarManager sharedInstance].statusBarHidden = !useCellular;
 }
 
 /*** 视频任务大小 ***/
@@ -1052,7 +1053,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 - (UILabel *)failedDescLabel {
     if (!_failedDescLabel) {
         _failedDescLabel = [[UILabel alloc] init];
-        _failedDescLabel.text = @"视频加载失败，点击重试";
+        _failedDescLabel.text = @"加载失败，请检查网络设置";
         _failedDescLabel.textColor = [UIColor whiteColor];
         _failedDescLabel.font = [UIFont systemFontOfSize:14.0f];
         _failedDescLabel.textAlignment = NSTextAlignmentCenter;
@@ -1063,7 +1064,7 @@ NSTimeInterval ReplayerPanelKeepToActivateTimeInterval  = 5.0f;
 - (UIButton *)failedButton {
     if (!_failedButton) {
         _failedButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_failedButton setTitle:@"重 试" forState:UIControlStateNormal];
+        [_failedButton setTitle:@"刷新重试" forState:UIControlStateNormal];
         [_failedButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
         [_failedButton setTitleColor:RGBA(255, 255, 255, 1) forState:UIControlStateNormal];
         _failedButton.layer.cornerRadius = 17.0*kScale;

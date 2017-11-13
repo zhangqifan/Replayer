@@ -1,9 +1,8 @@
 //
 //  UIView+ReplayerPanelProtocol.m
-//  PlayerInCaffe
 //
-//  Created by qifan.zhang on 2017/6/1.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/6/1.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 #import "UIView+ReplayerPanelProtocol.h"

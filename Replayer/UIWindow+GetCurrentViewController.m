@@ -1,9 +1,8 @@
 //
 //  UIWindow+GetCurrentViewController.m
-//  PlayerInCaffe
 //
-//  Created by qifan.zhang on 2017/6/6.
-//  Copyright © 2017年 qifan.zhang. All rights reserved.
+//  Created by zhangqifan on 2017/6/6.
+//  Copyright © 2017年 zhangqifan. All rights reserved.
 //
 
 #import "UIWindow+GetCurrentViewController.h"
